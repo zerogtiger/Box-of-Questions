@@ -1,0 +1,10 @@
+- Change metadata (favicon, header, etc.)
+- Trim
+- No empty string for name
+- improve logic for answer page
+- Add post feature
+- Special routing
+- remove unnecessary stuff
+- deploy
+- test on mobile
+- generate qr code

@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model questions {
+  id       Int      @id @default(autoincrement())
+  uid      Int
+  question String
+  answer   String
+  time     DateTime @db.Timestamptz(6)
+  posted   Boolean
+  users    users    @relation(fields: [uid], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  id        Int         @id @default(autoincrement())
+  username  String      @unique
+  password  String
+  name      String      @db.VarChar(255)
+  q_header  String
+  q_open    Boolean
+  box_open  Boolean
+  questions questions[]
+}

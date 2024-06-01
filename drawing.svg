@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="120mm"
+   height="120mm"
+   viewBox="0 0 120 120"
+   version="1.1"
+   id="svg1"
+   inkscape:export-filename="bitmap.svg"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   inkscape:version="1.3 (0e150ed, 2023-07-21)"
+   sodipodi:docname="drawing.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d5d5d5"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.84096521"
+     inkscape:cx="151.01695"
+     inkscape:cy="299.06112"
+     inkscape:window-width="1800"
+     inkscape:window-height="1126"
+     inkscape:window-x="1389"
+     inkscape:window-y="43"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <rect
+       x="76.515314"
+       y="137.89573"
+       width="549.90127"
+       height="424.61795"
+       id="rect1" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <circle
+       style="fill:#ffffff;fill-opacity:1;stroke-width:1.19652"
+       id="path1"
+       cx="60"
+       cy="60"
+       r="60" />
+    <text
+       xml:space="preserve"
+       transform="matrix(0.59589174,0,0,0.59589174,-255.90293,-85.470279)"
+       id="text1"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:192px;font-family:'Arial Black';-inkscape-font-specification:'Arial Black,  Bold';direction:rtl;white-space:pre;shape-inside:url(#rect1);fill:#000000;fill-opacity:1;stroke-width:3.03496"><tspan
+         x="434.41602"
+         y="310.91887"
+         id="tspan3"><tspan
+           style="font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro Bold'"
+           id="tspan2">の</tspan></tspan></text>
+  </g>
+</svg>
