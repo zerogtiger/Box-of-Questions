@@ -1,9 +1,11 @@
 "use server"
 import { PrismaClient } from '@prisma/client'
+import { createClient } from '@supabase/supabase-js';
 import { revalidatePath } from "next/cache"
 import { promisify } from 'util';
 
 const prisma = new PrismaClient()
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY!);
 
 export type _login_user = {
   id: number;
@@ -57,8 +59,10 @@ export async function _login_registerable(name: string, username: string, passwo
         box_open: false,
       }
     }).catch((e) => console.log(e));
+
+
   }
-  return !exist;
+  return exist;
 }
 
 // export async function _login_login(username: string, password: string) {

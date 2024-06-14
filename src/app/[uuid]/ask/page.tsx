@@ -5,17 +5,20 @@ import Indicator from "@/components/indicator";
 import TextField from "@/components/textfield";
 import { _ask_getData, _ask_user, _ask_submitData } from "./actions";
 import { useEffect, useState } from "react";
+import { _profile_getPFPURL } from "../[pwd]/profile/actions";
 
-export default function Ask({ params }: { params: { username: string } }) {
+export default function Ask({ params }: { params: { uuid: string } }) {
 
   const [question, setQuestion] = useState<string>("");
   const [name, setName] = useState<string>("◻️◻️◻️◻️◻️◻️");
   const [id, setId] = useState<number>(-1);
   const [qOpen, setQOpen] = useState<boolean>(true);
+  const [postNew, setPostNew] = useState<boolean>(false);
   const [prompt, setPrompt] = useState<string>("◻️ ◻️ ◻️ ◻️ ◻️ ◻️ ◻️ ◻️ ◻️ ◻️ ");
   const [color, setColor] = useState<string>("lightgreen"); // indicator should reflect change from empty
+  const [pfp, setPFP] = useState<string>("");
 
-  const username = params.username; 
+  const username = params.uuid; 
 
   useEffect(() => {
     const updateData = async () => {
@@ -24,6 +27,9 @@ export default function Ask({ params }: { params: { username: string } }) {
       setName(user.name);
       setPrompt(user.q_header);
       setQOpen(user.q_open);
+      setPostNew(user.post_new);
+      const tmpPfp = await _profile_getPFPURL(username);
+      setPFP(tmpPfp);
     };
 
     updateData();
@@ -32,7 +38,7 @@ export default function Ask({ params }: { params: { username: string } }) {
   const submit = async () => {
     if (question) {
       setColor("yellow");
-      await _ask_submitData(id, question);
+      await _ask_submitData(id, question, postNew);
       setQuestion("");
       setColor("lightgreen");
     }
@@ -41,7 +47,7 @@ export default function Ask({ params }: { params: { username: string } }) {
   return (
     <main className="bg-white flex justify-center min-h-screen">
       <div className="-border border-black max-w-[440px] w-3/4">
-        <Header title={name} subtitle="の提问箱" />
+        <Header title={name} subtitle="の提问箱" url={pfp}/>
         {
           qOpen ? [
             <div className="-border border-black text-black text-[14px] font-normal mt-6 mb-1">
@@ -56,6 +62,13 @@ export default function Ask({ params }: { params: { username: string } }) {
         }
         <div className="flex">
           <div className="w-1/2 -border flex gap-4">
+            <Button fg="black" bg="white" shadow="darkgreen" link="/login">
+              <div className="py-3 px-3 leading-4 font-semibold">
+                领只
+                <br />
+                箱子
+              </div>
+            </Button>
             <Button fg="white" bg="black" shadow="darkgray" link={`box`}>
               <div className="py-3 px-3 leading-4 font-semibold">
                 翻ta的

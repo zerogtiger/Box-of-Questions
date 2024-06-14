@@ -4,19 +4,15 @@ import Header from "@/components/header";
 import Indicator from "@/components/indicator";
 import TextField from "@/components/textfield";
 import { useState, useEffect } from "react";
-import { _profile_checkPassword, _profile_getPFPURL, _profile_getUserInfo, _profile_reval, _profile_setNewName, _profile_setNewPrompt, _profile_toggleBox, _profile_toggleQOpen, _profile_updatePassword, _profile_user } from "./actions";
+import { _profile_checkPassword, _profile_deleteAccount, _profile_getPFPURL, _profile_getUserInfo, _profile_setNewName, _profile_setNewPrompt, _profile_toggleBox, _profile_togglePostNew, _profile_toggleQOpen, _profile_updatePassword, _profile_user } from "./actions";
 import { useRouter } from "next/navigation";
 import { default as IMAGE } from "next/image";
 import { hash } from "@/components/hash";
-import { decode } from "punycode";
 import { createClient } from '@supabase/supabase-js'
-import { throws } from "assert";
-import { revalidatePath, unstable_noStore } from "next/cache";
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY!);
 
 export default function Profile({ params }: { params: { uuid: string, pwd: string } }) {
-  unstable_noStore();
 
   const [question, setQuestion] = useState<string>("");
 
@@ -25,11 +21,13 @@ export default function Profile({ params }: { params: { uuid: string, pwd: strin
   const [id, setId] = useState<number>(-1);
   const [qOpen, setQOpen] = useState<boolean>(false);
   const [boxOpen, setBoxOpen] = useState<boolean>(false);
+  const [postNew, setPostNew] = useState<boolean>(false);
   const [prompt, setPrompt] = useState<string>("◻️ ◻️ ◻️ ◻️ ◻️ ◻️ ◻️ ◻️ ◻️ ◻️ ");
   const [newPrompt, setNewPrompt] = useState<string>("◻️ ◻️ ◻️ ◻️ ◻️ ◻️ ◻️ ◻️ ◻️ ◻️ ");
 
   const [boxInd, setBoxInd] = useState<string[]>(["gray", "yellow", "gray"]);
   const [askInd, setAskInd] = useState<string[]>(["gray", "yellow", "gray"]);
+  const [postInd, setPostInd] = useState<string[]>(["gray", "yellow", "gray"]);
   const [nameInd, setNameInd] = useState<string>("gray");
   const [promptInd, setPromptInd] = useState<string>("gray");
   const [passwordInd, setPasswordInd] = useState<string>("lightgreen");
@@ -40,7 +38,9 @@ export default function Profile({ params }: { params: { uuid: string, pwd: strin
   const [confirmPassword, setConfirmPassword] = useState<string>("");
 
   const [pfp, setPFP] = useState<string>("");
-  const [uPFPURL, setUPFPURL] = useState<string>("");
+  const [pfpDisplay, setPfpDisplay] = useState<string>("/pfp_preload.png");
+
+  const [confirmDel, setConfirmDel] = useState<boolean>(false);
 
   const username = params.uuid;
   const password = params.pwd;
@@ -55,6 +55,7 @@ export default function Profile({ params }: { params: { uuid: string, pwd: strin
       setId(user.id);
       setQOpen(user.q_open);
       setBoxOpen(user.box_open);
+      setPostNew(user.post_new);
       setPrompt(user.q_header);
       setNewPrompt(user.q_header);
       const newAskInd = askInd.map((c, i) => {
@@ -67,11 +68,16 @@ export default function Profile({ params }: { params: { uuid: string, pwd: strin
         else { return "gray" }
       });
       setBoxInd(newBoxInd);
+      const newPostInd = postInd.map((c, i) => {
+        if (i === (user.post_new ? 0 : 2)) { return (user.post_new ? "lightgreen" : "lightred") }
+        else { return "gray" }
+      });
+      setPostInd(newPostInd);
       const tmp_pfp = await _profile_getPFPURL(username);
-      console.log(tmp_pfp);
+      // console.log(await fetch(tmp_pfp));
+      setPfpDisplay(tmp_pfp);
       setPFP(tmp_pfp);
-      setUPFPURL(tmp_pfp);
-      router.refresh();
+      // router.refresh();
     }
 
     const verifyPassword = async () => {
@@ -131,21 +137,48 @@ export default function Profile({ params }: { params: { uuid: string, pwd: strin
   }, [boxOpen]);
 
   useEffect(() => {
-    const canvas = document.getElementById("canvas")! as HTMLCanvasElement;
-    if (canvas.getContext) {
-      const ctx = canvas.getContext("2d")!;
-      const img = new Image();
-      ctx.clearRect(0, 0, 64, 64);
-      img.addEventListener("load", () => {
-        // _profile_reval();
-        const m = Math.min(img.width, img.height);
-        ctx.drawImage(img, (img.width - m) / 2, (img.height - m) / 2, m, m, 0, 0, 64, 64);
-      });
-      img.src = pfp;
-      console.log(pfp);
-      router.refresh();
+    const newPostInd = postInd.map((c, i) => {
+      if (i === (postNew ? 0 : 2) && id !== -1) { return (postNew ? "lightgreen" : "lightred") }
+      else { return "gray" }
+    });
+    setPostInd(newPostInd);
+  }, [postNew]);
+
+  const deleteAccount = async () => {
+    if (confirmDel === true) {
+      setConfirmDel(false);
     }
-  }, [pfp]);
+    else {
+      setConfirmDel(true);
+    }
+  }
+
+  const logOut = () => {
+    // console.log("hi");
+    router.replace("/login");
+    return;
+  }
+
+  const viewBox = async () => {
+    if (confirmDel === true) {
+      await _profile_deleteAccount(username);
+      setConfirmDel(false);
+      router.push("/login");
+    }
+    else {
+      router.push("answer");
+    }
+  }
+
+  const togglePostNew = async () => {
+    const newPostInd = postInd.map((c, i) => {
+      if (i === 1) { return "yellow" }
+      else { return "gray" }
+    });
+    setPostInd(postInd);
+    _profile_togglePostNew(id as number, !postNew);
+    setPostNew(!postNew);
+  }
 
   const toggleQOpen = async () => {
     const newAskInd = askInd.map((c, i) => {
@@ -168,59 +201,74 @@ export default function Profile({ params }: { params: { uuid: string, pwd: strin
   }
 
   const changeName = async () => {
+    if (name === newName) return;
     setNameInd("yellow");
     _profile_setNewName(id as number, newName);
     setName(newName);
   }
 
   const changePrompt = async () => {
+    if (prompt === newPrompt) return;
     setPromptInd("yellow");
     _profile_setNewPrompt(id as number, newPrompt);
     setPrompt(newPrompt);
   }
 
-  async function changePFP(formData: FormData) {
-    setPFPUploadInd("yellow");
-    const file = formData.get("image") as File;
-    const url = URL.createObjectURL(file);
-    setPFP(url);
-
-    // crop & downscale image
+  async function previewPFP() {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d")!;
     canvas.width = 200;
     canvas.height = 200;
-    ctx.clearRect(0, 0, 201, 201);
 
-    const img = new Image();
-    img.addEventListener("load", async () => {
-      const m = Math.min(img.width, img.height);
-      ctx.drawImage(img, (img.width - m) / 2, (img.height - m) / 2, m, m, 0, 0, 201, 201);
-      const pfpURL = canvas.toDataURL("image/png");
-
-      let arr = pfpURL.split(","),
-        mime = arr[0].match(/:(.*?);/)![1],
-        bstr = atob(arr[arr.length - 1]),
-        n = bstr.length,
-        u8arr = new Uint8Array(n);
-      while (n--) {
-        u8arr[n] = bstr.charCodeAt(n);
-      }
-      const ufile = new File([u8arr], username + ".png", { type: mime });
-
-      const { error: uploadError } = await supabase.storage.from("user_pfp").upload(username + ".png", ufile, {
-        upsert: true,
+    // console.log((document.getElementById("display_pfp") as HTMLImageElement).src);
+    setPFPInd("yellow");
+    const input = document.getElementById("file_input") as HTMLInputElement;
+    if (input && (input as HTMLInputElement).files && (input as HTMLInputElement).files![0]) {
+      console.log("drawing");
+      const file = (input as HTMLInputElement).files![0];
+      const img = new Image();
+      ctx.clearRect(0, 0, 201, 201);
+      img.addEventListener("load", () => {
+        const m = Math.min(img.width, img.height);
+        ctx.drawImage(img, (img.width - m) / 2, (img.height - m) / 2, m, m, 0, 0, 201, 201);
+        setPfpDisplay(canvas.toDataURL("image/png"));
       });
-      // await _profile_reval();
-      if (uploadError) {
-        throw uploadError;
-      }
-      setPFPUploadInd("lightgreen");
+      img.src = URL.createObjectURL(file);
+    }
+    else {
       setPFPInd("lightgreen");
-      setUPFPURL(canvas.toDataURL("image/png"));
-      router.refresh();
+      return;
+    }
+  }
+
+  async function changePFP(formData: FormData) {
+
+    // if no new image, return
+    if ((formData.get("image") as File).name === "") return;
+    const pfpURL = (document.getElementById("display_pfp") as HTMLImageElement).src;
+    setPFP(pfpURL);
+
+    // decode
+    let arr = pfpURL.split(","),
+      mime = arr[0].match(/:(.*?);/)![1],
+      bstr = atob(arr[arr.length - 1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    const ufile = new File([u8arr], username + ".png", { type: mime });
+
+    // upload
+    const { error: uploadError } = await supabase.storage.from("user_pfp").upload(username + ".png", ufile, {
+      upsert: true,
     });
-    img.src = pfp; // Set source path
+    if (uploadError) {
+      throw uploadError;
+    }
+    (document.getElementById("pfp_upload") as HTMLFormElement).reset();
+    setPFPUploadInd("lightgreen");
+    setPFPInd("lightgreen");
   }
 
   const changePassword = async () => {
@@ -242,15 +290,21 @@ export default function Profile({ params }: { params: { uuid: string, pwd: strin
 
   return (
     <main className="bg-white min-h-screen">
-
       <div className="flex justify-center ">
         <div className="-border border-black max-w-[440px] w-3/4">
-          <Header title={name} subtitle="设置箱子ING" url="/pfp.jpg"/>
+          <Header title={name} subtitle="设置箱子ING" url={pfp} />
           <div className="-border flex mt-2 mb-4 h-fit">
             <div className="w-1/2 -border gap-4 font-bold text-2xl flex items-end">
               账号 ⟵
             </div>
             <div className=" w-1/2 justify-end -border flex gap-3">
+              <Button fg="white" bg="black" shadow="darkgray" link="share">
+                <div className="-border py-3 px-3 leading-4 font-semibold">
+                  分享
+                  <br />
+                  箱子
+                </div>
+              </Button>
               <Button fg="white" bg="black" shadow="darkgray" link="answer">
                 <div className="py-3 px-3 leading-4 font-semibold">
                   查看
@@ -261,9 +315,8 @@ export default function Profile({ params }: { params: { uuid: string, pwd: strin
             </div>
           </div>
           <div className="flex flex-row">
-            <canvas id="canvas" width="64" height="64" className="shadow-[4px_4px_0px_0px_#505050]">
-            </canvas>
-            <form action={changePFP} className="w-full -border border-black place-items-center justify-end">
+            <IMAGE id="display_pfp" width={64} height={64} src={pfpDisplay} alt="Profile photo" />
+            <form action={changePFP} className="w-full -border border-black place-items-center justify-end" id="pfp_upload">
               <div className="flex pb-3 justify-end gap-3 ">
                 <Indicator color={pfpInd} />
                 <Button fg="white" bg="black" shadow="darkgray">
@@ -286,13 +339,7 @@ export default function Profile({ params }: { params: { uuid: string, pwd: strin
                 type="file"
                 name="image"
                 accept="image/jpeg, image/apng, image/avif, image/gif, image/png, image/webp"
-                onChange={async () => {
-                  setPFPInd("yellow");
-                  const input = document.getElementById("file_input") as HTMLInputElement;
-                  const file = (input ? (input as HTMLInputElement).files![0] : null) as File;
-                  // console.log(file.type);
-                  setPFP(URL.createObjectURL(file));
-                }}
+                onChange={previewPFP}
               />
             </form>
           </div>
@@ -331,7 +378,7 @@ export default function Profile({ params }: { params: { uuid: string, pwd: strin
               </Button>
             </div>
           </div>
-          <div className="-border flex mt-2 mb-5 h-fit">
+          <div className="-border flex mt-2 mb-4 h-fit">
             <div className="w-1/2 -border gap-4 font-bold text-2xl flex items-end">
               <Indicator color={boxInd[0]} />
               <Indicator color={boxInd[1]} />
@@ -341,6 +388,20 @@ export default function Profile({ params }: { params: { uuid: string, pwd: strin
               <Button fg="white" bg="black" shadow="darkgray" onclick={toggleBoxOpen}>
                 <div className="px-3 leading-6 font-semibold">
                   ⟵ 开启 / 停用查看
+                </div>
+              </Button>
+            </div>
+          </div>
+          <div className="-border flex mt-2 mb-5 h-fit">
+            <div className="w-1/2 -border gap-4 font-bold text-2xl flex items-end">
+              <Indicator color={postInd[0]} />
+              <Indicator color={postInd[1]} />
+              <Indicator color={postInd[2]} />
+            </div>
+            <div className=" w-1/2 justify-end -border flex gap-3">
+              <Button fg="white" bg="black" shadow="darkgray" onclick={togglePostNew}>
+                <div className="px-3 leading-6 font-semibold">
+                  ⟵ 在箱中显示新问题
                 </div>
               </Button>
             </div>
@@ -379,15 +440,13 @@ export default function Profile({ params }: { params: { uuid: string, pwd: strin
 
       <div className="mt-4 bg-[#EFEFEF] flex justify-center">
         <div className="-border border-black max-w-[440px] w-3/4">
-          <Header title={newName} subtitle="の提问箱" url="/pfp.jpg"/>
+          <Header title={newName} subtitle="の提问箱" url={pfp} />
           <div className="-border border-black text-black text-[14px] font-normal mt-6 mb-1">
             {newPrompt}
           </div>
           <TextField maxChar={1000} placeholder={"ta的问题"} rows={6} text={question} setText={setQuestion} />
         </div>
       </div>
-
-
       <div className="flex justify-center ">
         <div className="-border border-black max-w-[440px] w-3/4">
           <div className="text-center text-sm my-6 text-[#AAAAAA]">
@@ -395,13 +454,55 @@ export default function Profile({ params }: { params: { uuid: string, pwd: strin
           </div>
           <div className="flex mb-8">
             <div className="w-1/2 -border flex gap-4">
+              <Button fg={confirmDel ? "white" : "black"} bg={confirmDel ? "darkgreen" : "white"} shadow={confirmDel ? "black" : "darkred"} onclick={deleteAccount}>
+                <div className="py-3 px-3 leading-4 font-semibold" >
+                  {
+                    confirmDel ?
+                      <div>
+                        取消
+                        < br />
+                        ⟵-
+                      </div>
+                      :
+                      <div>
+                        删除
+                        <br />
+                        账号
+                      </div>
+                  }
+                </div>
+              </Button>
+              <Button fg="black" bg="white" shadow="darkred" onclick={logOut}>
+                <div className="py-3 px-3 leading-4 font-semibold">
+                  退出
+                  <br />
+                  登录
+                </div>
+              </Button>
             </div>
             <div className=" w-1/2 justify-end -border flex gap-3">
-              <Button fg="white" bg="black" shadow="darkgray" link="answer">
-                <div className="py-3 px-3 leading-4 font-semibold">
-                  查看
+              <Button fg="white" bg="black" shadow="darkgray" link="share">
+                <div className="-border py-3 px-3 leading-4 font-semibold">
+                  分享
                   <br />
                   箱子
+                </div>
+              </Button>
+              <Button fg="white" bg={confirmDel ? "darkred" : "black"} shadow={confirmDel ? "black" : "darkgray"} onclick={viewBox}>
+                <div className="py-3 px-3 leading-4 font-semibold">
+                  {confirmDel ?
+                    <div>
+                      确认
+                      <br />
+                      ⟶-
+                    </div>
+                    :
+                    <div>
+                      查看
+                      <br />
+                      箱子
+                    </div>
+                  }
                 </div>
               </Button>
             </div>
@@ -410,6 +511,7 @@ export default function Profile({ params }: { params: { uuid: string, pwd: strin
       </div>
     </main>
   );
+
 }
 // <TextField maxChar={-1} placeholder={"账号密码"} />
 // <div className="-border flex justify-end mt-4">

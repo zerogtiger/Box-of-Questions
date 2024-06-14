@@ -26,5 +26,6 @@ model users {
   q_header  String
   q_open    Boolean
   box_open  Boolean
+  post_new  Boolean     @default(false)
   questions questions[]
 }

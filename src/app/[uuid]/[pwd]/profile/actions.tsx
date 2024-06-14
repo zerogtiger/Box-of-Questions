@@ -13,18 +13,28 @@ export type _profile_user = {
   name: string;
   box_open: boolean;
   q_open: boolean;
+  post_new: boolean;
   q_header: string;
 };
 
-export async function _profile_reval() {
-  revalidatePath("/");
-}
-
 export async function _profile_getPFPURL(username: string) {
-  console.log("username");
-  const ret = supabase.storage.from("user_pfp").getPublicUrl(username + ".png")!.data.publicUrl;
-  revalidatePath("/");
-  return ret;
+  if (username === "") return "";
+  const { data, error } = await supabase.storage
+    .from('user_pfp')
+    .list();
+
+  if (error) {
+    console.log(error.message)
+  };
+  const mapped = data?.map(pfp => pfp.name.substring(0, pfp.name.length - 4));
+  if (mapped?.includes(username)) {
+
+    const date = new Date();
+    const ret = supabase.storage.from("user_pfp").getPublicUrl(username + ".png")!.data.publicUrl + "?" + date.toISOString();
+    console.log(ret);
+    return ret;
+  }
+  return "/grey7c7c7c_nobg.svg"
 }
 
 
@@ -44,6 +54,31 @@ export async function _profile_getPFPURL(username: string) {
 //   // console.log(val.data.publicUrl);
 //   // revalidatePath("/");
 // }
+
+export async function _profile_deleteAccount(username: string) {
+  const status = await prisma.users.findUnique({
+    where: {
+      username: username,
+    },
+    select: {
+      id: true,
+    }
+  }).catch(e => { throw new Error(e.message) });
+
+  const delQuestions = await prisma.questions.deleteMany({
+    where: {
+      uid: status?.id,
+    }
+  }).catch(e => console.log(e));
+
+  const delPFP = await supabase.storage.from("user_pfp").remove([username + ".png"]).catch(e => console.log(e));
+
+  const delUser = await prisma.users.delete({
+    where: {
+      id: status?.id,
+    }
+  }).catch(e => console.log(e));
+}
 
 export async function _profile_updatePassword(username: string, password: string) {
   const currUser = await prisma.users.update({
@@ -69,6 +104,17 @@ export async function _profile_checkPassword(username: string, password: string)
     return true;
   }
   return false;
+}
+
+export async function _profile_togglePostNew(id: number, post_new: boolean) {
+  const newUser = await prisma.users.update({
+    where: {
+      id: id,
+    },
+    data: {
+      post_new: post_new,
+    },
+  }).catch((e) => { console.log(e) });
 }
 
 export async function _profile_toggleQOpen(id: number, q_Open: boolean) {
@@ -124,6 +170,7 @@ export async function _profile_getUserInfo(username: string) {
       name: true,
       box_open: true,
       q_open: true,
+      post_new: true,
       q_header: true
     },
   }).catch((e) => { console.log(e) });

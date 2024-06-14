@@ -2,6 +2,7 @@
 import { PrismaClient } from '@prisma/client'
 import { revalidatePath } from "next/cache"
 import { _profile_user } from '../profile/actions';
+import { use } from 'react';
 
 const prisma = new PrismaClient()
 
@@ -17,6 +18,16 @@ export type _answer_qa = {
   answer: string;
   posted: boolean;
 };
+
+export async function _answer_clearBox(uid: number) {
+  console.log(uid);
+  const result = await prisma.questions.deleteMany({
+    where: {
+      uid: uid,
+    },
+  });
+}
+
 
 export async function _answer_checkPassword(username: string, password: string) {
   const currUser = await prisma.users.findUnique({

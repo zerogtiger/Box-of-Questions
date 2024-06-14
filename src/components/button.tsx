@@ -14,7 +14,7 @@ export default function Button({ fg, bg, shadow, children, onclick, link }:
     link?: string
   }) {
 
-  const twclassname = `flex items-center align-middle border border-black w-fit rounded-[10px] text-sm font-semibold ${fgColor[fg]} ${bgColor[bg]} ${shadowColor[shadow]}`
+  const twclassname = `flex items-center align-middle border border-black w-fit rounded-[10px] text-sm font-semibold ${fgColor[fg]} ${bgColor[bg]} ${shadowColor[shadow]} cursor-pointer`
 
   return link ? (
     <Link href={link}>

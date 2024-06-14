@@ -5,10 +5,11 @@ import TextDisplay from "@/components/textdisplay";
 import Indicator from "@/components/indicator";
 import TextField from "@/components/textfield";
 import { useEffect, useState } from "react";
-import { _answer_answer, _answer_changePosted, _answer_checkPassword, _answer_getQA, _answer_getUserInfo, _answer_qa, _answer_remove, _answer_user } from "./actions";
+import { _answer_answer, _answer_changePosted, _answer_checkPassword, _answer_clearBox, _answer_getQA, _answer_getUserInfo, _answer_qa, _answer_remove, _answer_user } from "./actions";
 import { useRouter } from "next/navigation";
+import { _profile_deleteAccount, _profile_getPFPURL } from "../profile/actions";
 
-export default function Answer({ params }: { params: {uuid: string, pwd: string } }) {
+export default function Answer({ params }: { params: { uuid: string, pwd: string } }) {
 
   const [name, setName] = useState<string>("◻️◻️◻️◻️◻️◻️");
   const [id, setId] = useState<number>(-1); // user id
@@ -19,7 +20,11 @@ export default function Answer({ params }: { params: {uuid: string, pwd: string 
   const [focus, setFocus] = useState<number | undefined>(undefined); // currently editing
   const [confirmDel, setConfirmDel] = useState<number | undefined>(undefined);
 
+  const [confirmClear, setConfirmClear] = useState<boolean>(false);
+
   const [answer, setAnswer] = useState<string[]>([]); // array of new answers
+
+  const [pfp, setPFP] = useState<string>("");
 
   const username = params.uuid;
   const password = params.pwd;
@@ -55,9 +60,12 @@ export default function Answer({ params }: { params: {uuid: string, pwd: string 
         return ele.answer;
       });
       setAnswer(_answer);
+
+      const tmp_pfp = await _profile_getPFPURL(username);
+      setPFP(tmp_pfp);
     };
 
-    const verifyPassword = async() => {
+    const verifyPassword = async () => {
       const verdict = await _answer_checkPassword(username, password);
       if (verdict === false) {
         router.push("/login");
@@ -237,6 +245,31 @@ export default function Answer({ params }: { params: {uuid: string, pwd: string 
     setPosted(_posted);
   }
 
+  const clearBox = () => {
+    if (confirmClear === true) {
+      setConfirmClear(false);
+    }
+    else {
+      setConfirmClear(true);
+    }
+  }
+
+  const boxSettings = async () => {
+    if (confirmClear === true) {
+      await _answer_clearBox(id);
+      setqa([]);
+      setInd([]);
+      setPosted([]);
+      setFocus(undefined);
+      setConfirmDel(undefined);
+      setAnswer([]);
+      setConfirmClear(false);
+    }
+    else {
+      router.push("profile");
+    }
+  }
+
   const setAnsIdx = (idx: number, newAnswer: string) => {
     const _answer = answer.map((_ele, _idx) => {
       if (_idx === idx) {
@@ -252,14 +285,21 @@ export default function Answer({ params }: { params: {uuid: string, pwd: string 
   return (
     <main className="bg-white flex justify-center min-h-screen">
       <div className="-border border-black max-w-[440px] w-3/4">
-        <Header title={name} subtitle="查看箱子ING" />
+        <Header title={name} subtitle="查看箱子ING" url={pfp} />
         <div className="flex mt-2 mb-4">
           <div className="w-1/2 -border flex gap-4 font-bold text-[40px] leading-snug">
             ↓
           </div>
           <div className=" w-1/2 justify-end -border flex gap-3">
+            <Button fg="white" bg="black" shadow="darkgray" link="share">
+              <div className="-border py-3 px-3 leading-4 font-semibold">
+                分享
+                <br />
+                箱子
+              </div>
+            </Button>
             <Button fg="white" bg="black" shadow="darkgray" link="profile">
-              <div className="-border py-2 px-3 leading-4 font-semibold">
+              <div className="-border py-3 px-3 leading-4 font-semibold">
                 设置
                 <br />
                 箱子
@@ -362,13 +402,53 @@ export default function Answer({ params }: { params: {uuid: string, pwd: string 
         </div>
         <div className="flex mb-8">
           <div className="w-1/2 -border flex gap-4">
+            <Button fg={confirmClear ? "white" : "black"} bg={confirmClear ? "darkgreen" : "white"} shadow={confirmClear ? "black" : "darkred"} onclick={clearBox}>
+              <div className="py-3 px-3 leading-4 font-semibold">
+                {confirmClear ?
+                  <div>
+                    取消
+                    < br />
+                    ⟵-
+                  </div>
+                  :
+                  <div>
+                    清空
+                    <br />
+                    箱子
+                  </div>
+                }
+              </div>
+            </Button>
+            <Button fg="black" bg="white" shadow="darkred">
+              <div className="py-3 px-3 leading-4 font-semibold">
+                退出
+                <br />
+                登录
+              </div>
+            </Button>
           </div>
           <div className=" w-1/2 justify-end -border flex gap-3">
-            <Button fg="white" bg="black" shadow="darkgray" link="profile">
-              <div className="py-3 px-3 leading-4 font-semibold">
-                设置
+            <Button fg="white" bg="black" shadow="darkgray" link="share">
+              <div className="-border py-3 px-3 leading-4 font-semibold">
+                分享
                 <br />
                 箱子
+              </div>
+            </Button>
+            <Button fg="white" bg={confirmClear ? "darkred" : "black"} shadow={confirmClear ? "black" : "darkgray"} onclick={boxSettings}>
+              <div className="py-3 px-3 leading-4 font-semibold">
+                {confirmClear ?
+                  <div>
+                    确认
+                    < br />
+                    ⟶-
+                  </div>
+                  :
+                  <div>
+                    设置
+                    <br />
+                    箱子
+                  </div>}
               </div>
             </Button>
           </div>

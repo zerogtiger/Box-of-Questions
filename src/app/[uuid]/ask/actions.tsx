@@ -9,9 +9,10 @@ export type _ask_user = {
   name: string;
   q_header: string;
   q_open: boolean;
+  post_new: boolean;
 };
 
-export async function _ask_submitData(uid: number, question: string) {
+export async function _ask_submitData(uid: number, question: string, post: boolean) {
   const date = new Date();
   const userinfo = await prisma.questions.create({
     data: {
@@ -19,7 +20,7 @@ export async function _ask_submitData(uid: number, question: string) {
       question: question,
       answer: "",
       time: date,
-      posted: false,
+      posted: post,
     },
   }).catch((e) => { console.log(e) });
 }
@@ -32,6 +33,7 @@ export async function _ask_getData(username: string) {
       name: true,
       q_header: true,
       q_open: true,
+      post_new: true,
     },
   }).catch(() => { });
   return userinfo as _ask_user;
