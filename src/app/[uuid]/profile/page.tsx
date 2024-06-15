@@ -4,15 +4,17 @@ import Header from "@/components/header";
 import Indicator from "@/components/indicator";
 import TextField from "@/components/textfield";
 import { useState, useEffect } from "react";
-import { _profile_checkPassword, _profile_deleteAccount, _profile_getPFPURL, _profile_getUserInfo, _profile_setNewName, _profile_setNewPrompt, _profile_toggleBox, _profile_togglePostNew, _profile_toggleQOpen, _profile_updatePassword, _profile_user } from "./actions";
+import {_profile_deleteAccount, _profile_getPFPURL, _profile_getUserInfo, _profile_setNewName, _profile_setNewPrompt, _profile_toggleBox, _profile_togglePostNew, _profile_toggleQOpen, _profile_updatePassword, _profile_user } from "./actions";
 import { useRouter } from "next/navigation";
 import { default as IMAGE } from "next/image";
 import { hash } from "@/components/hash";
 import { createClient } from '@supabase/supabase-js'
+import { _login_deleteCookie } from "@/app/login/actions";
+import { _answer_checkPassword } from "../answer/actions";
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY!);
 
-export default function Profile({ params }: { params: { uuid: string, pwd: string } }) {
+export default function Profile({ params }: { params: { uuid: string } }) {
 
   const [question, setQuestion] = useState<string>("");
 
@@ -43,7 +45,6 @@ export default function Profile({ params }: { params: { uuid: string, pwd: strin
   const [confirmDel, setConfirmDel] = useState<boolean>(false);
 
   const username = params.uuid;
-  const password = params.pwd;
   const router = useRouter();
 
   useEffect(() => {
@@ -81,13 +82,17 @@ export default function Profile({ params }: { params: { uuid: string, pwd: strin
     }
 
     const verifyPassword = async () => {
-      const verdict = await _profile_checkPassword(username, password);
-      if (verdict === false) {
+      const verdict = await _answer_checkPassword(username);
+      if (verdict === true) {
+        updateData();
+        return;
+      }
+      else {
+        await _login_deleteCookie();
         router.push("/login");
         return;
       }
       // setPasswordInd("green");
-      updateData();
     }
 
     verifyPassword();
@@ -153,8 +158,9 @@ export default function Profile({ params }: { params: { uuid: string, pwd: strin
     }
   }
 
-  const logOut = () => {
+  const logOut = async () => {
     // console.log("hi");
+    await _login_deleteCookie();
     router.replace("/login");
     return;
   }

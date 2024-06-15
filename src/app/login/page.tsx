@@ -3,10 +3,11 @@ import Button from "@/components/button";
 import Header from "@/components/header";
 import Indicator from "@/components/indicator";
 import TextField from "@/components/textfield";
-import { useState } from "react";
-import { _login_loginable, _login_registerable } from "./actions";
+import { useEffect, useState } from "react";
+import { _login_createCookie, _login_getCookies, _login_loginable, _login_registerable } from "./actions";
 import { hash } from "@/components/hash";
 import { useRouter } from "next/navigation";
+
 
 export default function Login() {
   const [loginColor, setLoginColor] = useState<string>("gray");
@@ -22,12 +23,26 @@ export default function Login() {
 
   const router = useRouter();
 
+  useEffect(() => {
+    const init = async () => {
+      console.log("hi");
+      const username = await _login_getCookies();
+      if (username) {
+        router.push(`/${username}/answer`);
+      }
+      return;
+    };
+
+    init();
+  }, [])
+
   const login = async () => {
     setLoginColor("yellow");
     const loginable = await _login_loginable(loginUsername, hash(loginPassword));
-    if (loginable === true) {
+    if (loginable) {
       setLoginColor("lightgreen");
-      router.push("/" + loginUsername + "/" + hash(loginPassword) + "/answer");
+      await _login_createCookie(loginable);
+      router.push("/" + loginUsername + "/answer");
     }
     else {
       setLoginPassword("");
@@ -41,9 +56,10 @@ export default function Login() {
     const nonEmpty = (regName !== "" && regUsername !== "");
     if (passwordsEqual === true && nonEmpty === true) {
       const regable = await _login_registerable(regName, regUsername, hash(regPassword));
-      if (regable === true) {
+      if (regable) {
         setRegColor("lightgreen");
-        router.push("/" + regUsername + "/" + hash(regPassword) + "/profile");
+        await _login_createCookie(regable);
+        router.push("/" + regUsername + "/profile");
       }
       else {
         setRegColor("lightred");

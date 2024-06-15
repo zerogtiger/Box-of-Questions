@@ -19,13 +19,14 @@ model questions {
 }
 
 model users {
-  id        Int         @id @default(autoincrement())
-  username  String      @unique
-  password  String
-  name      String      @db.VarChar(255)
-  q_header  String
-  q_open    Boolean
-  box_open  Boolean
-  post_new  Boolean     @default(false)
-  questions questions[]
+  id         Int         @id @default(autoincrement())
+  username   String      @unique
+  password   String
+  name       String      @db.VarChar(255)
+  q_header   String
+  q_open     Boolean
+  box_open   Boolean
+  post_new   Boolean     @default(false)
+  cookie_key String?     @default("")
+  questions  questions[]
 }

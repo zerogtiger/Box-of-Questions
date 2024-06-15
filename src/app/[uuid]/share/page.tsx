@@ -8,13 +8,15 @@ import { usePathname, useRouter } from "next/navigation";
 import { default as IMAGE } from "next/image";
 import { hash } from "@/components/hash";
 import { createClient } from '@supabase/supabase-js'
-import { _profile_checkPassword, _profile_getPFPURL, _profile_user, _profile_getUserInfo } from "../profile/actions";
-import QRCode from 'qrcode'
+import { _profile_getPFPURL, _profile_user, _profile_getUserInfo } from "../profile/actions";
+import { _login_deleteCookie, _login_getCookies } from "@/app/login/actions";
+import { _answer_checkPassword } from "../answer/actions";
 // With async/await
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY!);
 
 export default function Share({ params }: { params: { uuid: string, pwd: string } }) {
+  const QRCode = require('qrcode');
 
   const [name, setName] = useState<string>("◻️◻️◻️◻️◻️◻️");
   const [pfp, setPFP] = useState<string>("");
@@ -94,7 +96,7 @@ export default function Share({ params }: { params: { uuid: string, pwd: string 
       await drawShareImage(user, tmp_pfp);
     }
 
-    const drawShareImage = async(user: _profile_user, tmp_pfp: string) => {
+    const drawShareImage = async (user: _profile_user, tmp_pfp: string) => {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
       canvas.width = 710;
@@ -127,13 +129,13 @@ export default function Share({ params }: { params: { uuid: string, pwd: string 
         ctx.font = "semibold 25px inter";
         ctx.fillStyle = "#7C7C7C";
         ctx.textAlign = "center";
-        const { version } = require('../../../../../package.json');
+        const { version } = require('../../../../package.json');
         ctx.fillText(`提问の箱子 | ${version}`, 28, 340);
         ctx.restore();
         ctx.lineWidth = 6;
         ctx.strokeRect(0, 0, 710, 710);
         const pathname = document.location.href;
-        const qrCodeUrl = await generateQR(pathname.substring(0, pathname.length - 64 - 1 - 5) + "ask");
+        const qrCodeUrl = await generateQR(pathname.substring(0, pathname.length - 5) + "ask");
         // console.log(pathname.substring(0, pathname.length-64-1-5) + "ask");
         // console.log(document.location.href + user.name + "/ask");
         // const qrCodeUrl = await generateQR(document.location.hostname + user.name + "/ask");
@@ -181,13 +183,17 @@ export default function Share({ params }: { params: { uuid: string, pwd: string 
     }
 
     const verifyPassword = async () => {
-      const verdict = await _profile_checkPassword(username, password);
-      if (verdict === false) {
+      const verdict = await _answer_checkPassword(username);
+      if (verdict === true) {
+        updateData();
+        return;
+      }
+      else {
+        await _login_deleteCookie();
         router.push("/login");
         return;
       }
       // setPasswordInd("green");
-      updateData();
     }
 
     verifyPassword();

@@ -5,7 +5,7 @@ import Indicator from "@/components/indicator";
 import TextField from "@/components/textfield";
 import { _ask_getData, _ask_user, _ask_submitData } from "./actions";
 import { useEffect, useState } from "react";
-import { _profile_getPFPURL } from "../[pwd]/profile/actions";
+import { _profile_getPFPURL } from "../profile/actions";
 
 export default function Ask({ params }: { params: { uuid: string } }) {
 

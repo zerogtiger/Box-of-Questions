@@ -3,6 +3,8 @@ import { PrismaClient } from '@prisma/client'
 import { revalidatePath } from "next/cache"
 import { _profile_user } from '../profile/actions';
 import { use } from 'react';
+import { cookies } from 'next/headers';
+import { cookieHash } from '@/components/hash';
 
 const prisma = new PrismaClient()
 
@@ -28,20 +30,65 @@ export async function _answer_clearBox(uid: number) {
   });
 }
 
+export async function _answer_checkPassword(username: string) {
+  try {
+    const cid = cookies().get("id")?.value;
+    const ckey = cookies().get("key")?.value;
+    console.log(cid);
+    console.log(ckey);
 
-export async function _answer_checkPassword(username: string, password: string) {
-  const currUser = await prisma.users.findUnique({
-    where: {
-      username: username,
-    },
-    select: {
-      password: true,
-    },
-  });
-  if (currUser?.password === password) {
-    return true;
+    if (!(cid || ckey)) {
+      console.log(1);
+      return false;
+    }
+    console.log(2);
+    const currUser = await prisma.users.findUnique({
+      where: {
+        username: username,
+      },
+      select: {
+        id: true,
+        cookie_key: true,
+      },
+    });
+    console.log(3);
+    console.log(currUser);
+    if (currUser && currUser?.cookie_key === ckey && currUser?.id.toString() === cid) {
+      cookies().delete("id");
+      cookies().delete("key");
+      const expire = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7);
+      const id = currUser.id;
+      cookies().set({
+        name: "id",
+        value: id.toString(),
+        path: "/",
+        expires: expire,
+      });
+      const newKey = cookieHash(currUser.id);
+      await prisma.users.update({
+        where: {
+          id: id,
+        },
+        data: {
+          cookie_key: newKey,
+        },
+      });
+      cookies().set({
+        name: "key",
+        value: newKey,
+        path: "/",
+        expires: expire,
+      });
+
+      console.log(4);
+      return true;
+    }
+    console.log(5);
+    return false;
+  } catch (error) {
+    console.log(error);
+    return false;
   }
-  return false;
 }
 
 export async function _answer_changePosted(uid: number, qid: number, posted: boolean) {

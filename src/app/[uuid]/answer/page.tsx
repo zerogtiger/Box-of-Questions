@@ -8,8 +8,9 @@ import { useEffect, useState } from "react";
 import { _answer_answer, _answer_changePosted, _answer_checkPassword, _answer_clearBox, _answer_getQA, _answer_getUserInfo, _answer_qa, _answer_remove, _answer_user } from "./actions";
 import { useRouter } from "next/navigation";
 import { _profile_deleteAccount, _profile_getPFPURL } from "../profile/actions";
+import { _login_deleteCookie } from "@/app/login/actions";
 
-export default function Answer({ params }: { params: { uuid: string, pwd: string } }) {
+export default function Answer({ params }: { params: { uuid: string } }) {
 
   const [name, setName] = useState<string>("◻️◻️◻️◻️◻️◻️");
   const [id, setId] = useState<number>(-1); // user id
@@ -27,7 +28,6 @@ export default function Answer({ params }: { params: { uuid: string, pwd: string
   const [pfp, setPFP] = useState<string>("");
 
   const username = params.uuid;
-  const password = params.pwd;
 
   const router = useRouter();
 
@@ -66,12 +66,17 @@ export default function Answer({ params }: { params: { uuid: string, pwd: string
     };
 
     const verifyPassword = async () => {
-      const verdict = await _answer_checkPassword(username, password);
-      if (verdict === false) {
+      const verdict = await _answer_checkPassword(username);
+      if (verdict === true) {
+        console.log("in");
+        updateData();
+        return;
+      }
+      else {
+        await _login_deleteCookie();
         router.push("/login");
         return;
       }
-      updateData();
     }
 
     verifyPassword();
@@ -282,6 +287,13 @@ export default function Answer({ params }: { params: { uuid: string, pwd: string
     setAnswer(_answer);
   }
 
+  const logOut = async () => {
+    // console.log("hi");
+    await _login_deleteCookie();
+    router.replace("/login");
+    return;
+  }
+
   return (
     <main className="bg-white flex justify-center min-h-screen">
       <div className="-border border-black max-w-[440px] w-3/4">
@@ -419,7 +431,7 @@ export default function Answer({ params }: { params: { uuid: string, pwd: string
                 }
               </div>
             </Button>
-            <Button fg="black" bg="white" shadow="darkred">
+            <Button fg="black" bg="white" shadow="darkred" onclick={logOut}>
               <div className="py-3 px-3 leading-4 font-semibold">
                 退出
                 <br />

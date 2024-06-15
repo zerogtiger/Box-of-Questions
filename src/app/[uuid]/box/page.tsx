@@ -6,7 +6,7 @@ import Indicator from "@/components/indicator";
 import TextField from "@/components/textfield";
 import { useEffect, useState } from "react";
 import { _box_getQA, _box_getUserInfo, _box_qa, _box_user } from "./actions";
-import { _profile_getPFPURL } from "../[pwd]/profile/actions";
+import { _profile_getPFPURL } from "../profile/actions";
 
 export default function Box({ params }: { params: { uuid: string } }) {
 

@@ -4,6 +4,7 @@ import { createClient } from '@supabase/supabase-js'
 import { revalidatePath } from "next/cache"
 import { decode } from 'base64-arraybuffer';
 import { promisify } from 'util';
+import { cookies } from 'next/headers';
 
 const prisma = new PrismaClient();
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY!);
@@ -91,20 +92,27 @@ export async function _profile_updatePassword(username: string, password: string
   });
 }
 
-export async function _profile_checkPassword(username: string, password: string) {
-  const currUser = await prisma.users.findUnique({
-    where: {
-      username: username,
-    },
-    select: {
-      password: true,
-    },
-  });
-  if (currUser?.password === password) {
-    return true;
-  }
-  return false;
-}
+// export async function _profile_checkPassword(username: string) {
+//   const cid = cookies().get("id")?.value;
+//   const ckey = cookies().get("key")?.value;
+//
+//   if (!(cid || ckey)) {
+//     return false;
+//   }
+//   const currUser = await prisma.users.findUnique({
+//     where: {
+//       username: username,
+//     },
+//     select: {
+//       id: true,
+//       cookie_key: true,
+//     },
+//   });
+//   if (currUser?.cookie_key === ckey && currUser?.id.toString() === cid) {
+//     return true;
+//   }
+//   return false;
+// }
 
 export async function _profile_togglePostNew(id: number, post_new: boolean) {
   const newUser = await prisma.users.update({
