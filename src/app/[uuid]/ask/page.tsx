@@ -6,6 +6,7 @@ import TextField from "@/components/textfield";
 import { _ask_getData, _ask_user, _ask_submitData } from "./actions";
 import { useEffect, useState } from "react";
 import { _profile_getPFPURL } from "../profile/actions";
+import Metadata from "@/components/metadata";
 
 export default function Ask({ params }: { params: { uuid: string } }) {
 
@@ -18,7 +19,7 @@ export default function Ask({ params }: { params: { uuid: string } }) {
   const [color, setColor] = useState<string>("lightgreen"); // indicator should reflect change from empty
   const [pfp, setPFP] = useState<string>("");
 
-  const username = params.uuid; 
+  const username = params.uuid;
 
   useEffect(() => {
     const updateData = async () => {
@@ -45,54 +46,57 @@ export default function Ask({ params }: { params: { uuid: string } }) {
   }
 
   return (
-    <main className="bg-white flex justify-center min-h-screen">
-      <div className="-border border-black max-w-[440px] w-3/4">
-        <Header title={name} subtitle="の提问箱" url={pfp}/>
-        {
-          qOpen ? [
-            <div className="-border border-black text-black text-[14px] font-normal mt-6 mb-1">
-              {prompt}
-            </div>,
-            (id === -1 ? "" :
-              <TextField maxChar={1000} placeholder={"问点什么"} rows={6} text={question} setText={setQuestion} />)
-          ] :
-            <div className="-border border-black text-black text-[14px] font-normal mt-6 mb-1 pb-6">
-              提问纸用完了，等等再试吧。。。
-            </div>
-        }
-        <div className="flex">
-          <div className="w-1/2 -border flex gap-4">
-            <Button fg="black" bg="white" shadow="darkgreen" link="/login">
-              <div className="py-3 px-3 leading-4 font-semibold">
-                领只
-                <br />
-                箱子
-              </div>
-            </Button>
-            <Button fg="white" bg="black" shadow="darkgray" link={`box`}>
-              <div className="py-3 px-3 leading-4 font-semibold">
-                翻ta的
-                <br />
-                箱子→
-              </div>
-            </Button>
-          </div>
+    <>
+    <Metadata title={`${name} の 提问箱 │ 提问の箱子`} description="" />
+      <main className="bg-white flex justify-center min-h-screen">
+        <div className="-border border-black max-w-[440px] w-3/4">
+          <Header title={name} subtitle="の提问箱" url={pfp} />
           {
-            qOpen && id !== -1 ?
-              <div className=" w-1/2 justify-end -border flex gap-3">
-                <Indicator color={color} />
-                <Button fg="white" bg="black" shadow="darkgray" onclick={submit} link="box">
-                  <div className="py-3 px-3 leading-4 font-semibold">
-                    提交
-                    <br />
-                    -⟶
-                  </div>
-                </Button>
-              </div> : ""
+            qOpen ? [
+              <div className="-border border-black text-black text-[14px] font-normal mt-6 mb-1">
+                {prompt}
+              </div>,
+              (id === -1 ? "" :
+                <TextField maxChar={1000} placeholder={"问点什么"} rows={6} text={question} setText={setQuestion} />)
+            ] :
+              <div className="-border border-black text-black text-[14px] font-normal mt-6 mb-1 pb-6">
+                提问纸用完了，等等再试吧。。。
+              </div>
           }
+          <div className="flex">
+            <div className="w-1/2 -border flex gap-4">
+              <Button fg="black" bg="white" shadow="darkgreen" link="/login">
+                <div className="py-3 px-3 leading-4 font-semibold">
+                  领只
+                  <br />
+                  箱子
+                </div>
+              </Button>
+              <Button fg="white" bg="black" shadow="darkgray" link={`box`}>
+                <div className="py-3 px-3 leading-4 font-semibold">
+                  翻ta的
+                  <br />
+                  箱子→
+                </div>
+              </Button>
+            </div>
+            {
+              qOpen && id !== -1 ?
+                <div className=" w-1/2 justify-end -border flex gap-3">
+                  <Indicator color={color} />
+                  <Button fg="white" bg="black" shadow="darkgray" onclick={submit} link="box">
+                    <div className="py-3 px-3 leading-4 font-semibold">
+                      提交
+                      <br />
+                      -⟶
+                    </div>
+                  </Button>
+                </div> : ""
+            }
+          </div>
         </div>
-      </div>
-    </main >
+      </main >
+    </>
   );
 }
 // <TextField maxChar={-1} placeholder={"账号密码"} />

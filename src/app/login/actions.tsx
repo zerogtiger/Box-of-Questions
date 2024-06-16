@@ -3,9 +3,8 @@ import { PrismaClient } from '@prisma/client'
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers'
 
-import { revalidatePath } from "next/cache"
-import { promisify } from 'util';
 import { cookieHash } from '@/components/hash';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 const prisma = new PrismaClient()
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY!);
@@ -20,8 +19,8 @@ export async function _login_getCookies() {
   try {
     const id = Number(cookies().get("id")?.value);
     const key = cookies().get("key")?.value;
-    console.log("id: ", id);
-    console.log("key: ", key);
+    // console.log("id: ", id);
+    // console.log("key: ", key);
     if (id) {
       const key_s = await prisma.users.findFirstOrThrow({
         where: {
@@ -30,7 +29,7 @@ export async function _login_getCookies() {
         select: {
           cookie_key: true,
         }
-      }).catch((e) => {
+      }).catch((e: PrismaClientKnownRequestError) => {
         if (e.message === "No users found") {
           console.log(e.message);
           return null;
@@ -96,7 +95,7 @@ export async function _login_createCookie(id: number) {
 }
 
 export async function _login_deleteCookie() {
-  console.log("deleted");
+  // console.log("deleted");
   cookies().delete("id");
   cookies().delete("key");
 }
@@ -110,7 +109,7 @@ export async function _login_loginable(username: string, password: string) {
     select: {
       id: true,
     }
-  }).catch((e) => {
+  }).catch((e: PrismaClientKnownRequestError) => {
     if (e.message === "No users found") {
       console.log(e.message);
       return null;
@@ -129,7 +128,7 @@ export async function _login_registerable(name: string, username: string, passwo
     where: {
       username: username,
     },
-  }).catch((e) => {
+  }).catch((e: PrismaClientKnownRequestError) => {
     if (e.message === "No users found") {
       exist = false;
     }
@@ -151,7 +150,7 @@ export async function _login_registerable(name: string, username: string, passwo
       select: {
         id: true,
       },
-    }).catch((e) => console.log(e));
+    }).catch((e: any) => console.log(e));
     return result?.id;
   }
   return null;

@@ -11,6 +11,7 @@ import { createClient } from '@supabase/supabase-js'
 import { _profile_getPFPURL, _profile_user, _profile_getUserInfo } from "../profile/actions";
 import { _login_deleteCookie, _login_getCookies } from "@/app/login/actions";
 import { _answer_checkPassword } from "../answer/actions";
+import Metadata from "@/components/metadata";
 // With async/await
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY!);
@@ -158,21 +159,21 @@ export default function Share({ params }: { params: { uuid: string, pwd: string 
           u8arr[n] = bstr.charCodeAt(n);
         }
         const ufile = new File([u8arr], username + ".png", { type: mime });
-        console.log(ufile);
+        // console.log(ufile);
         pfpImage.src = URL.createObjectURL(ufile);
         qrcode.src = qrCodeUrl;
         logo.src = "/grey7c7c7c_nobg.svg";
         const proms = [
-          new Promise(res => logo.onload = () => { res("logo"); console.log("logo"); }),
-          new Promise(res => qrcode.onload = () => { res("qrcode"); console.log("qrcode") }),
-          new Promise(res => pfpImage.onload = () => { res("pfpImage"); console.log("pfpImage") }),
+          new Promise(res => logo.onload = () => res("logo")),
+          new Promise(res => qrcode.onload = () => res("qrcode")),
+          new Promise(res => pfpImage.onload = () => res("pfpImage")),
         ];
         Promise.all(proms).then(_ => {
           ctx.save();
           ctx.translate(canvas.width / 2, canvas.height / 2);
           ctx.rotate(-Math.PI / 2);
           ctx.drawImage(logo, -150, 315, 35, 35);
-          console.log("draw");
+          // console.log("draw");
           ctx.restore();
           ctx.drawImage(qrcode, 310, 360, 280, 280);
           ctx.drawImage(pfpImage, 500, 40, 100, 100);
@@ -200,55 +201,58 @@ export default function Share({ params }: { params: { uuid: string, pwd: string 
   }, []);
 
   return (
-    <main className="bg-white min-h-screen">
-      <div className="flex justify-center ">
-        <div className="-border border-black max-w-[440px] w-3/4">
-          <Header title={name} subtitle="分享箱子ING" url={pfp} />
-          <div className="pt-4 pb-2">
-            分享此图片以分享提问箱：
+    <>
+      <Metadata title={`${name} 分享箱子ING │ 提问の箱子`} description="" />
+      <main className="bg-white min-h-screen">
+        <div className="flex justify-center ">
+          <div className="-border border-black max-w-[440px] w-3/4">
+            <Header title={name} subtitle="分享箱子ING" url={pfp} />
+            <div className="pt-4 pb-2">
+              分享此图片以分享提问箱：
+            </div>
+            <IMAGE id="qr_code" className="w-full mt-2 mb-4 grayshadow" width={360} height={360} src={shareSrc} alt="Share QR code" />
           </div>
-          <IMAGE id="qr_code" className="w-full mt-2 mb-4 grayshadow" width={360} height={360} src={shareSrc} alt="Share QR code" />
         </div>
-      </div>
 
-      <div className="flex justify-center ">
-        <div className="-border border-black max-w-[440px] w-3/4">
-          <div className="flex mb-8">
-            <div className="w-1/2 -border flex gap-4">
-              <Button fg="white" bg="black" shadow="darkgray" onclick={() => router.back()}>
-                <div className="py-3 px-3 leading-4 font-semibold">
-                  <div>
-                    返回
-                    <br />
-                    ⟵-
+        <div className="flex justify-center ">
+          <div className="-border border-black max-w-[440px] w-3/4">
+            <div className="flex mb-8">
+              <div className="w-1/2 -border flex gap-4">
+                <Button fg="white" bg="black" shadow="darkgray" onclick={() => router.back()}>
+                  <div className="py-3 px-3 leading-4 font-semibold">
+                    <div>
+                      返回
+                      <br />
+                      ⟵-
+                    </div>
                   </div>
-                </div>
-              </Button>
-            </div>
-            <div className=" w-1/2 justify-end -border flex gap-3">
-              <Button fg="white" bg="black" shadow="darkgray" link="answer">
-                <div className="py-3 px-3 leading-4 font-semibold">
-                  <div>
-                    查看
-                    <br />
-                    箱子
+                </Button>
+              </div>
+              <div className=" w-1/2 justify-end -border flex gap-3">
+                <Button fg="white" bg="black" shadow="darkgray" link="answer">
+                  <div className="py-3 px-3 leading-4 font-semibold">
+                    <div>
+                      查看
+                      <br />
+                      箱子
+                    </div>
                   </div>
-                </div>
-              </Button>
-              <Button fg="white" bg="black" shadow="darkgray" link="profile">
-                <div className="py-3 px-3 leading-4 font-semibold">
-                  <div>
-                    设置
-                    <br />
-                    箱子
+                </Button>
+                <Button fg="white" bg="black" shadow="darkgray" link="profile">
+                  <div className="py-3 px-3 leading-4 font-semibold">
+                    <div>
+                      设置
+                      <br />
+                      箱子
+                    </div>
                   </div>
-                </div>
-              </Button>
+                </Button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 
 }

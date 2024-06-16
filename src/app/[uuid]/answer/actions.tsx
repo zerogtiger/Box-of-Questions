@@ -5,6 +5,7 @@ import { _profile_user } from '../profile/actions';
 import { use } from 'react';
 import { cookies } from 'next/headers';
 import { cookieHash } from '@/components/hash';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 const prisma = new PrismaClient()
 
@@ -22,7 +23,7 @@ export type _answer_qa = {
 };
 
 export async function _answer_clearBox(uid: number) {
-  console.log(uid);
+  // console.log(uid);
   const result = await prisma.questions.deleteMany({
     where: {
       uid: uid,
@@ -34,14 +35,14 @@ export async function _answer_checkPassword(username: string) {
   try {
     const cid = cookies().get("id")?.value;
     const ckey = cookies().get("key")?.value;
-    console.log(cid);
-    console.log(ckey);
+    // console.log(cid);
+    // console.log(ckey);
 
     if (!(cid || ckey)) {
-      console.log(1);
+      // console.log(1);
       return false;
     }
-    console.log(2);
+    // console.log(2);
     const currUser = await prisma.users.findUnique({
       where: {
         username: username,
@@ -51,8 +52,8 @@ export async function _answer_checkPassword(username: string) {
         cookie_key: true,
       },
     });
-    console.log(3);
-    console.log(currUser);
+    // console.log(3);
+    // console.log(currUser);
     if (currUser && currUser?.cookie_key === ckey && currUser?.id.toString() === cid) {
       cookies().delete("id");
       cookies().delete("key");
@@ -80,10 +81,10 @@ export async function _answer_checkPassword(username: string) {
         expires: expire,
       });
 
-      console.log(4);
+      // console.log(4);
       return true;
     }
-    console.log(5);
+    // console.log(5);
     return false;
   } catch (error) {
     console.log(error);
@@ -136,7 +137,7 @@ export async function _answer_getQA(uid: number) {
     orderBy: {
       time: 'desc',
     },
-  }).catch((e) => { console.log(e) });
+  }).catch((e: any) => { console.log(e) });
 
   const qaDataNNull: _answer_qa[] | void = await prisma.questions.findMany({
     where: {
@@ -154,7 +155,7 @@ export async function _answer_getQA(uid: number) {
     orderBy: {
       time: 'desc',
     },
-  }).catch((e) => { console.log(e) });
+  }).catch((e: any) => { console.log(e) });
   // console.log((qaDataNNull as _answer_qa[])[0].answer === null);
   // console.log(qaData);
   return (qaDataNull as _answer_qa[]).concat(qaDataNNull as _answer_qa[]);
@@ -168,6 +169,6 @@ export async function _answer_getUserInfo(username: string) {
       name: true,
       box_open: true,
     },
-  }).catch((e) => { console.log(e) });
+  }).catch((e: PrismaClientKnownRequestError) => { console.log(e) });
   return userinfo as _answer_user;
 }

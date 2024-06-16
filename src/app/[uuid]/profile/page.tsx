@@ -4,13 +4,14 @@ import Header from "@/components/header";
 import Indicator from "@/components/indicator";
 import TextField from "@/components/textfield";
 import { useState, useEffect } from "react";
-import {_profile_deleteAccount, _profile_getPFPURL, _profile_getUserInfo, _profile_setNewName, _profile_setNewPrompt, _profile_toggleBox, _profile_togglePostNew, _profile_toggleQOpen, _profile_updatePassword, _profile_user } from "./actions";
+import { _profile_deleteAccount, _profile_getPFPURL, _profile_getUserInfo, _profile_setNewName, _profile_setNewPrompt, _profile_toggleBox, _profile_togglePostNew, _profile_toggleQOpen, _profile_updatePassword, _profile_user } from "./actions";
 import { useRouter } from "next/navigation";
 import { default as IMAGE } from "next/image";
 import { hash } from "@/components/hash";
 import { createClient } from '@supabase/supabase-js'
 import { _login_deleteCookie } from "@/app/login/actions";
 import { _answer_checkPassword } from "../answer/actions";
+import Metadata from "@/components/metadata";
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY!);
 
@@ -230,7 +231,7 @@ export default function Profile({ params }: { params: { uuid: string } }) {
     setPFPInd("yellow");
     const input = document.getElementById("file_input") as HTMLInputElement;
     if (input && (input as HTMLInputElement).files && (input as HTMLInputElement).files![0]) {
-      console.log("drawing");
+      // console.log("drawing");
       const file = (input as HTMLInputElement).files![0];
       const img = new Image();
       ctx.clearRect(0, 0, 201, 201);
@@ -250,7 +251,11 @@ export default function Profile({ params }: { params: { uuid: string } }) {
   async function changePFP(formData: FormData) {
 
     // if no new image, return
-    if ((formData.get("image") as File).name === "") return;
+    if ((formData.get("image") as File).name === "") {
+      setPFPUploadInd("lightgreen");
+      return;
+    }
+    // console.log("now");
     const pfpURL = (document.getElementById("display_pfp") as HTMLImageElement).src;
     setPFP(pfpURL);
 
@@ -273,8 +278,8 @@ export default function Profile({ params }: { params: { uuid: string } }) {
       throw uploadError;
     }
     (document.getElementById("pfp_upload") as HTMLFormElement).reset();
-    setPFPUploadInd("lightgreen");
     setPFPInd("lightgreen");
+    setPFPUploadInd("lightgreen");
   }
 
   const changePassword = async () => {
@@ -295,227 +300,230 @@ export default function Profile({ params }: { params: { uuid: string } }) {
   }
 
   return (
-    <main className="bg-white min-h-screen">
-      <div className="flex justify-center ">
-        <div className="-border border-black max-w-[440px] w-3/4">
-          <Header title={name} subtitle="设置箱子ING" url={pfp} />
-          <div className="-border flex mt-2 mb-4 h-fit">
-            <div className="w-1/2 -border gap-4 font-bold text-2xl flex items-end">
-              账号 ⟵
-            </div>
-            <div className=" w-1/2 justify-end -border flex gap-3">
-              <Button fg="white" bg="black" shadow="darkgray" link="share">
-                <div className="-border py-3 px-3 leading-4 font-semibold">
-                  分享
-                  <br />
-                  箱子
-                </div>
-              </Button>
-              <Button fg="white" bg="black" shadow="darkgray" link="answer">
-                <div className="py-3 px-3 leading-4 font-semibold">
-                  查看
-                  <br />
-                  箱子
-                </div>
-              </Button>
-            </div>
-          </div>
-          <div className="flex flex-row">
-            <IMAGE id="display_pfp" width={64} height={64} src={pfpDisplay} alt="Profile photo" />
-            <form action={changePFP} className="w-full -border border-black place-items-center justify-end" id="pfp_upload">
-              <div className="flex pb-3 justify-end gap-3 ">
-                <Indicator color={pfpInd} />
-                <Button fg="white" bg="black" shadow="darkgray">
-                  <label className="px-5 leading-6 font-semibold" htmlFor="file_input">
-                    ⟵ 上传头像
-                  </label>
+    <>
+      <Metadata title={`${name} 设置箱子ING │ 提问の箱子`} description="" />
+      <main className="bg-white min-h-screen">
+        <div className="flex justify-center ">
+          <div className="-border border-black max-w-[440px] w-3/4">
+            <Header title={name} subtitle="设置箱子ING" url={pfp} />
+            <div className="-border flex mt-2 mb-4 h-fit">
+              <div className="w-1/2 -border gap-4 font-bold text-2xl flex items-end">
+                账号 ⟵
+              </div>
+              <div className=" w-1/2 justify-end -border flex gap-3">
+                <Button fg="white" bg="black" shadow="darkgray" link="share">
+                  <div className="-border py-3 px-3 leading-4 font-semibold">
+                    分享
+                    <br />
+                    箱子
+                  </div>
+                </Button>
+                <Button fg="white" bg="black" shadow="darkgray" link="answer">
+                  <div className="py-3 px-3 leading-4 font-semibold">
+                    查看
+                    <br />
+                    箱子
+                  </div>
                 </Button>
               </div>
-              <div className="-border flex justify-end gap-3">
-                <Indicator color={pfpUploadInd} />
-                <Button fg="white" bg="black" shadow="darkgray">
-                  <button className="px-5 leading-6 font-semibold" type="submit">
-                    ⟵ 更换
-                  </button>
-                </Button>
-              </div>
-              <input
-                id="file_input"
-                className="hidden"
-                type="file"
-                name="image"
-                accept="image/jpeg, image/apng, image/avif, image/gif, image/png, image/webp"
-                onChange={previewPFP}
-              />
-            </form>
-          </div>
-          <div className="-border border-black text-black text-[14px] font-normal mt-4 mb-1">
-            更换密码
-          </div>
-          <TextField maxChar={-1} placeholder={"设置密码"} rows={1} text={newPassword} setText={setNewPassword} password={true} />
-          <div className="-border border-black text-black text-[14px] font-normal mt-4 mb-1">
-            确认密码
-          </div>
-          <TextField maxChar={-1} placeholder={"确认账户密码"} rows={1} text={confirmPassword} setText={setConfirmPassword} password={true} />
-          <div className="flex justify-end gap-3 pb-2 ">
-            <Indicator color={passwordInd} />
-            <Button fg="white" bg="black" shadow="darkgray" onclick={changePassword}>
-              <div className="px-5 leading-6 font-semibold">
-                更换 ⟶
-              </div>
-            </Button>
-          </div>
-          <div className="-border flex mt-2 mb-4 h-fit">
-            <div className="w-1/2 -border gap-4 font-bold text-2xl flex items-end">
-              箱子 ⟵
             </div>
-          </div>
-          <div className="-border flex mt-2 mb-4 h-fit">
-            <div className="w-1/2 -border gap-4 font-bold text-2xl flex items-end">
-              <Indicator color={askInd[0]} />
-              <Indicator color={askInd[1]} />
-              <Indicator color={askInd[2]} />
-            </div>
-            <div className=" w-1/2 justify-end -border flex gap-3">
-              <Button fg="white" bg="black" shadow="darkgray" onclick={toggleQOpen}>
-                <div className="px-3 leading-6 font-semibold">
-                  ⟵ 开启 / 停用提问
+            <div className="flex flex-row">
+              <IMAGE id="display_pfp" width={64} height={64} src={pfpDisplay} alt="Profile photo" />
+              <form action={changePFP} className="w-full -border border-black place-items-center justify-end" id="pfp_upload">
+                <div className="flex pb-3 justify-end gap-3 ">
+                  <Indicator color={pfpInd} />
+                  <Button fg="white" bg="black" shadow="darkgray">
+                    <label className="px-5 leading-6 font-semibold" htmlFor="file_input">
+                      ⟵ 上传头像
+                    </label>
+                  </Button>
                 </div>
-              </Button>
-            </div>
-          </div>
-          <div className="-border flex mt-2 mb-4 h-fit">
-            <div className="w-1/2 -border gap-4 font-bold text-2xl flex items-end">
-              <Indicator color={boxInd[0]} />
-              <Indicator color={boxInd[1]} />
-              <Indicator color={boxInd[2]} />
-            </div>
-            <div className=" w-1/2 justify-end -border flex gap-3">
-              <Button fg="white" bg="black" shadow="darkgray" onclick={toggleBoxOpen}>
-                <div className="px-3 leading-6 font-semibold">
-                  ⟵ 开启 / 停用查看
+                <div className="-border flex justify-end gap-3">
+                  <Indicator color={pfpUploadInd} />
+                  <Button fg="white" bg="black" shadow="darkgray" onclick={() => setPFPUploadInd("yellow")}>
+                    <button className="px-5 leading-6 font-semibold" type="submit">
+                      ⟵ 更换
+                    </button>
+                  </Button>
                 </div>
-              </Button>
+                <input
+                  id="file_input"
+                  className="hidden"
+                  type="file"
+                  name="image"
+                  accept="image/jpeg, image/apng, image/avif, image/gif, image/png, image/webp"
+                  onChange={previewPFP}
+                />
+              </form>
             </div>
-          </div>
-          <div className="-border flex mt-2 mb-5 h-fit">
-            <div className="w-1/2 -border gap-4 font-bold text-2xl flex items-end">
-              <Indicator color={postInd[0]} />
-              <Indicator color={postInd[1]} />
-              <Indicator color={postInd[2]} />
+            <div className="-border border-black text-black text-[14px] font-normal mt-4 mb-1">
+              更换密码
             </div>
-            <div className=" w-1/2 justify-end -border flex gap-3">
-              <Button fg="white" bg="black" shadow="darkgray" onclick={togglePostNew}>
-                <div className="px-3 leading-6 font-semibold">
-                  ⟵ 在箱中显示新问题
-                </div>
-              </Button>
+            <TextField maxChar={-1} placeholder={"设置密码"} rows={1} text={newPassword} setText={setNewPassword} password={true} />
+            <div className="-border border-black text-black text-[14px] font-normal mt-4 mb-1">
+              确认密码
             </div>
-          </div>
-          <div className="-border border-black text-black text-[14px] font-normal mt-2 mb-1">
-            名字（匿名）
-          </div>
-          <TextField maxChar={250} placeholder={"显示名"} rows={1} text={newName} setText={setNewName} />
-          <div className="flex justify-end gap-3 ">
-            <Indicator color={nameInd} />
-            <Button fg="white" bg="black" shadow="darkgray" onclick={changeName}>
-              <div className="px-5 leading-6 font-semibold">
-                更换 ⟶
-              </div>
-            </Button>
-          </div>
-          <div className="-border border-black text-black text-[14px] font-normal mt-2 mb-1">
-            提问箱提示
-          </div>
-          <TextField maxChar={1000} placeholder={"想让ta问什么问题呢？"} rows={6} text={newPrompt} setText={setNewPrompt} />
-          <div className="flex">
-            <div className="w-1/2 text-sm leading-none">
-              ↓预览如下
-            </div>
-            <div className="w-1/2 flex justify-end gap-3 ">
-              <Indicator color={promptInd} />
-              <Button fg="white" bg="black" shadow="darkgray" onclick={changePrompt}>
+            <TextField maxChar={-1} placeholder={"确认账户密码"} rows={1} text={confirmPassword} setText={setConfirmPassword} password={true} />
+            <div className="flex justify-end gap-3 pb-2 ">
+              <Indicator color={passwordInd} />
+              <Button fg="white" bg="black" shadow="darkgray" onclick={changePassword}>
                 <div className="px-5 leading-6 font-semibold">
                   更换 ⟶
                 </div>
               </Button>
             </div>
+            <div className="-border flex mt-2 mb-4 h-fit">
+              <div className="w-1/2 -border gap-4 font-bold text-2xl flex items-end">
+                箱子 ⟵
+              </div>
+            </div>
+            <div className="-border flex mt-2 mb-4 h-fit">
+              <div className="w-1/2 -border gap-4 font-bold text-2xl flex items-end">
+                <Indicator color={askInd[0]} />
+                <Indicator color={askInd[1]} />
+                <Indicator color={askInd[2]} />
+              </div>
+              <div className=" w-1/2 justify-end -border flex gap-3">
+                <Button fg="white" bg="black" shadow="darkgray" onclick={toggleQOpen}>
+                  <div className="px-3 leading-6 font-semibold">
+                    ⟵ 开启 / 停用提问
+                  </div>
+                </Button>
+              </div>
+            </div>
+            <div className="-border flex mt-2 mb-4 h-fit">
+              <div className="w-1/2 -border gap-4 font-bold text-2xl flex items-end">
+                <Indicator color={boxInd[0]} />
+                <Indicator color={boxInd[1]} />
+                <Indicator color={boxInd[2]} />
+              </div>
+              <div className=" w-1/2 justify-end -border flex gap-3">
+                <Button fg="white" bg="black" shadow="darkgray" onclick={toggleBoxOpen}>
+                  <div className="px-3 leading-6 font-semibold">
+                    ⟵ 开启 / 停用查看
+                  </div>
+                </Button>
+              </div>
+            </div>
+            <div className="-border flex mt-2 mb-5 h-fit">
+              <div className="w-1/2 -border gap-4 font-bold text-2xl flex items-end">
+                <Indicator color={postInd[0]} />
+                <Indicator color={postInd[1]} />
+                <Indicator color={postInd[2]} />
+              </div>
+              <div className=" w-1/2 justify-end -border flex gap-3">
+                <Button fg="white" bg="black" shadow="darkgray" onclick={togglePostNew}>
+                  <div className="px-3 leading-6 font-semibold">
+                    ⟵ 在箱中显示新问题
+                  </div>
+                </Button>
+              </div>
+            </div>
+            <div className="-border border-black text-black text-[14px] font-normal mt-2 mb-1">
+              名字（匿名）
+            </div>
+            <TextField maxChar={250} placeholder={"显示名"} rows={1} text={newName} setText={setNewName} />
+            <div className="flex justify-end gap-3 ">
+              <Indicator color={nameInd} />
+              <Button fg="white" bg="black" shadow="darkgray" onclick={changeName}>
+                <div className="px-5 leading-6 font-semibold">
+                  更换 ⟶
+                </div>
+              </Button>
+            </div>
+            <div className="-border border-black text-black text-[14px] font-normal mt-2 mb-1">
+              提问箱提示
+            </div>
+            <TextField maxChar={1000} placeholder={"想让ta问什么问题呢？"} rows={6} text={newPrompt} setText={setNewPrompt} />
+            <div className="flex">
+              <div className="w-1/2 text-sm leading-none">
+                ↓预览如下
+              </div>
+              <div className="w-1/2 flex justify-end gap-3 ">
+                <Indicator color={promptInd} />
+                <Button fg="white" bg="black" shadow="darkgray" onclick={changePrompt}>
+                  <div className="px-5 leading-6 font-semibold">
+                    更换 ⟶
+                  </div>
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="mt-4 bg-[#EFEFEF] flex justify-center">
-        <div className="-border border-black max-w-[440px] w-3/4">
-          <Header title={newName} subtitle="の提问箱" url={pfp} />
-          <div className="-border border-black text-black text-[14px] font-normal mt-6 mb-1">
-            {newPrompt}
+        <div className="mt-4 pb-3 bg-[#EFEFEF] flex justify-center">
+          <div className="-border border-black max-w-[440px] w-3/4">
+            <Header title={newName} subtitle="の提问箱" url={pfp} />
+            <div className="-border border-black text-black text-[14px] font-normal mt-6 mb-1">
+              {newPrompt}
+            </div>
+            <TextField maxChar={1000} placeholder={"ta的问题"} rows={6} text={question} setText={setQuestion} />
           </div>
-          <TextField maxChar={1000} placeholder={"ta的问题"} rows={6} text={question} setText={setQuestion} />
         </div>
-      </div>
-      <div className="flex justify-center ">
-        <div className="-border border-black max-w-[440px] w-3/4">
-          <div className="text-center text-sm my-6 text-[#AAAAAA]">
-            到底啦，没有更多设置啦！
-          </div>
-          <div className="flex mb-8">
-            <div className="w-1/2 -border flex gap-4">
-              <Button fg={confirmDel ? "white" : "black"} bg={confirmDel ? "darkgreen" : "white"} shadow={confirmDel ? "black" : "darkred"} onclick={deleteAccount}>
-                <div className="py-3 px-3 leading-4 font-semibold" >
-                  {
-                    confirmDel ?
+        <div className="flex justify-center ">
+          <div className="-border border-black max-w-[440px] w-3/4">
+            <div className="text-center text-sm my-6 text-[#AAAAAA]">
+              到底啦，没有更多设置啦！
+            </div>
+            <div className="flex mb-8">
+              <div className="w-1/2 -border flex gap-4">
+                <Button fg={confirmDel ? "white" : "black"} bg={confirmDel ? "darkgreen" : "white"} shadow={confirmDel ? "black" : "darkred"} onclick={deleteAccount}>
+                  <div className="py-3 px-3 leading-4 font-semibold" >
+                    {
+                      confirmDel ?
+                        <div>
+                          取消
+                          < br />
+                          ⟵-
+                        </div>
+                        :
+                        <div>
+                          删除
+                          <br />
+                          账号
+                        </div>
+                    }
+                  </div>
+                </Button>
+                <Button fg="black" bg="white" shadow="darkred" onclick={logOut}>
+                  <div className="py-3 px-3 leading-4 font-semibold">
+                    退出
+                    <br />
+                    登录
+                  </div>
+                </Button>
+              </div>
+              <div className=" w-1/2 justify-end -border flex gap-3">
+                <Button fg="white" bg="black" shadow="darkgray" link="share">
+                  <div className="-border py-3 px-3 leading-4 font-semibold">
+                    分享
+                    <br />
+                    箱子
+                  </div>
+                </Button>
+                <Button fg="white" bg={confirmDel ? "darkred" : "black"} shadow={confirmDel ? "black" : "darkgray"} onclick={viewBox}>
+                  <div className="py-3 px-3 leading-4 font-semibold">
+                    {confirmDel ?
                       <div>
-                        取消
-                        < br />
-                        ⟵-
+                        确认
+                        <br />
+                        ⟶-
                       </div>
                       :
                       <div>
-                        删除
+                        查看
                         <br />
-                        账号
+                        箱子
                       </div>
-                  }
-                </div>
-              </Button>
-              <Button fg="black" bg="white" shadow="darkred" onclick={logOut}>
-                <div className="py-3 px-3 leading-4 font-semibold">
-                  退出
-                  <br />
-                  登录
-                </div>
-              </Button>
-            </div>
-            <div className=" w-1/2 justify-end -border flex gap-3">
-              <Button fg="white" bg="black" shadow="darkgray" link="share">
-                <div className="-border py-3 px-3 leading-4 font-semibold">
-                  分享
-                  <br />
-                  箱子
-                </div>
-              </Button>
-              <Button fg="white" bg={confirmDel ? "darkred" : "black"} shadow={confirmDel ? "black" : "darkgray"} onclick={viewBox}>
-                <div className="py-3 px-3 leading-4 font-semibold">
-                  {confirmDel ?
-                    <div>
-                      确认
-                      <br />
-                      ⟶-
-                    </div>
-                    :
-                    <div>
-                      查看
-                      <br />
-                      箱子
-                    </div>
-                  }
-                </div>
-              </Button>
+                    }
+                  </div>
+                </Button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 
 }

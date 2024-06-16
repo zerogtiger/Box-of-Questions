@@ -32,7 +32,7 @@ export async function _profile_getPFPURL(username: string) {
 
     const date = new Date();
     const ret = supabase.storage.from("user_pfp").getPublicUrl(username + ".png")!.data.publicUrl + "?" + date.toISOString();
-    console.log(ret);
+    // console.log(ret);
     return ret;
   }
   return "/grey7c7c7c_nobg.svg"
