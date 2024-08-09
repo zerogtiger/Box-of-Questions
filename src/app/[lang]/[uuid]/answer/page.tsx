@@ -4,14 +4,15 @@ import Header from "@/components/header";
 import TextDisplay from "@/components/textdisplay";
 import Indicator from "@/components/indicator";
 import TextField from "@/components/textfield";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { _answer_answer, _answer_changePosted, _answer_checkPassword, _answer_clearBox, _answer_getQA, _answer_getUserInfo, _answer_qa, _answer_remove, _answer_user } from "./actions";
 import { useRouter } from "next/navigation";
 import { _profile_deleteAccount, _profile_getPFPURL } from "../profile/actions";
 import { _login_deleteCookie } from "../../login/actions";
 import Metadata from "@/components/metadata";
+import { useDictionary } from "../../dictionaryProvider";
 
-export default function Answer({ params }: { params: { uuid: string } }) {
+export default function Answer({ params }: { params: { lang: string, uuid: string } }) {
 
   const [name, setName] = useState<string>("◻️◻️◻️◻️◻️◻️");
   const [id, setId] = useState<number>(-1); // user id
@@ -296,12 +297,18 @@ export default function Answer({ params }: { params: { uuid: string } }) {
     return;
   }
 
+  const dict = useDictionary();
+
+  function formatNewline(val: string) {
+    return val.split(/\n/).map(line => <React.Fragment key={line}>{line}<br /></React.Fragment>);
+  }
+
   return (
     <>
-      <Metadata title={`${name} 查看箱子ING │ 提问の箱子`} description=""/>
+      <Metadata title={`${name} ${dict.answer.checkBox} │ ${dict.questionBox}`} description="" />
       <main className="bg-white flex justify-center min-h-screen">
         <div className="-border border-black max-w-[440px] w-3/4">
-          <Header title={name} subtitle="查看箱子ING" url={pfp} />
+          <Header title={name} subtitle={dict.answer.checkBox} url={pfp} />
           <div className="flex mt-2 mb-4">
             <div className="w-1/2 -border flex gap-4 font-bold text-[40px] leading-snug">
               ↓
@@ -309,16 +316,12 @@ export default function Answer({ params }: { params: { uuid: string } }) {
             <div className=" w-1/2 justify-end -border flex gap-3">
               <Button fg="white" bg="black" shadow="darkgray" link="share">
                 <div className="-border py-3 px-3 leading-4 font-semibold">
-                  分享
-                  <br />
-                  箱子
+                  {formatNewline(dict.shareBox)}
                 </div>
               </Button>
               <Button fg="white" bg="black" shadow="darkgray" link="profile">
                 <div className="-border py-3 px-3 leading-4 font-semibold">
-                  设置
-                  <br />
-                  箱子
+                  {formatNewline(dict.setting)}
                 </div>
               </Button>
             </div>
@@ -328,7 +331,7 @@ export default function Answer({ params }: { params: { uuid: string } }) {
             return [
               <TextDisplay>
                 <p className="text-[#AAAAAA] my-1">
-                  有人问：
+                  {dict.answer.someoneAsked}
                 </p>
                 <p className="text-black my-2 leading-[18px] whitespace-pre-wrap">
                   {ele.question}
@@ -336,20 +339,20 @@ export default function Answer({ params }: { params: { uuid: string } }) {
                 {focus === key ?
                   [
                     <p className="text-start text-[#AAAAAA] my-1">
-                      您答说：
+                      {dict.answer.youAnswer}
                     </p>,
-                    <TextField maxChar={1000} placeholder="您的回答" rows={5} text={answer[key]} setText={(ans: string) => setAnsIdx(key, ans)} />
+                    <TextField maxChar={1000} placeholder={dict.answer.yourAnswer} rows={5} text={answer[key]} setText={(ans: string) => setAnsIdx(key, ans)} />
                   ]
                   : ele.answer ? [
                     <p className="text-end text-[#AAAAAA] my-1">
-                      您回答说：
+                      {dict.answer.youHaveAnswer}
                     </p>,
                     <p className="text-end text-black my-2 leading-[18px]">
                       {ele.answer}
                     </p>,
                     (ele.answer !== answer[key] ? [
                       <p className="text-end text-[#AAAAAA] my-1">
-                        但您准备说：
+                        {dict.answer.butYouPrepareToSay}
                       </p>,
                       <p className="text-end text-[#888888] my-2 leading-[18px]">
                         {answer[key]}
@@ -359,7 +362,7 @@ export default function Answer({ params }: { params: { uuid: string } }) {
                     )] :
                     answer[key] ? [
                       <p className="text-end text-[#AAAAAA] my-1">
-                        您准备回答：
+                        {dict.answer.youPrepareToSay}
                       </p>,
                       <p className="text-end text-[#888888] my-2 leading-[18px]">
                         {answer[key]}
@@ -367,7 +370,7 @@ export default function Answer({ params }: { params: { uuid: string } }) {
                     ] :
                       [
                         <p className="text-end text-[#AAAAAA] my-1">
-                          您未回答。
+                          {dict.answer.unanswered}
                         </p>
                       ]
                 }
@@ -380,7 +383,7 @@ export default function Answer({ params }: { params: { uuid: string } }) {
                     shadow={confirmDel === key || focus == key ? "black" : "darkred"}
                     onclick={() => deleteQuestion(key)}>
                     <div className="py-[1px] px-4">
-                      {confirmDel === key || focus === key ? "← 取消" : "删除↑"}
+                      {confirmDel === key || focus === key ? "← " + dict.answer.cancel : dict.answer.delete + "↑"}
                     </div>
                   </Button>
                 </div>
@@ -392,7 +395,7 @@ export default function Answer({ params }: { params: { uuid: string } }) {
                     shadow={confirmDel === key ? "black" : "darkgray"}
                     onclick={() => editAnswer(key)}>
                     <div className="py-[1px] px-4">
-                      {confirmDel === key ? "确认↑" : focus === key ? "保存↑" : (ele.answer ? "修改↑" : "回答↑")}
+                      {confirmDel === key ? dict.answer.confirm + "↑" : focus === key ? dict.answer.save + "↑" : (ele.answer ? dict.answer.edit + "↑" : dict.answer.answer + "↑")}
                     </div>
                   </Button>
                 </div>
@@ -406,7 +409,7 @@ export default function Answer({ params }: { params: { uuid: string } }) {
                 <div className=" w-1/2 justify-end -border flex gap-3">
                   <Button fg="white" bg="black" shadow="darkgray" onclick={() => togglePosted(key)}>
                     <div className="px-3 leading-6 font-semibold">
-                      ⟵ 隐藏 / 发布
+                      ⟵ {dict.answer.hidePublish}
                     </div>
                   </Button>
                 </div>
@@ -414,7 +417,7 @@ export default function Answer({ params }: { params: { uuid: string } }) {
             ]
           })}
           <div className="text-center text-sm my-6 text-[#AAAAAA]">
-            到底啦，没有更多问题啦！
+            {dict.answer.bottomOfPage}
           </div>
           <div className="flex mb-8">
             <div className="w-1/2 -border flex gap-4">
@@ -422,48 +425,40 @@ export default function Answer({ params }: { params: { uuid: string } }) {
                 <div className="py-3 px-3 leading-4 font-semibold">
                   {confirmClear ?
                     <div>
-                      取消
+                      {dict.answer.cancel}
                       < br />
                       ⟵-
                     </div>
                     :
                     <div>
-                      清空
-                      <br />
-                      箱子
+                      {formatNewline(dict.emptyBox)}
                     </div>
                   }
                 </div>
               </Button>
               <Button fg="black" bg="white" shadow="darkred" onclick={logOut}>
                 <div className="py-3 px-3 leading-4 font-semibold">
-                  退出
-                  <br />
-                  登录
+                  {formatNewline(dict.logOut)}
                 </div>
               </Button>
             </div>
             <div className=" w-1/2 justify-end -border flex gap-3">
               <Button fg="white" bg="black" shadow="darkgray" link="share">
                 <div className="-border py-3 px-3 leading-4 font-semibold">
-                  分享
-                  <br />
-                  箱子
+                  {formatNewline(dict.shareBox)}
                 </div>
               </Button>
               <Button fg="white" bg={confirmClear ? "darkred" : "black"} shadow={confirmClear ? "black" : "darkgray"} onclick={boxSettings}>
                 <div className="py-3 px-3 leading-4 font-semibold">
                   {confirmClear ?
                     <div>
-                      确认
+                      {dict.answer.confirm}
                       < br />
                       ⟶-
                     </div>
                     :
                     <div>
-                      设置
-                      <br />
-                      箱子
+                      {formatNewline(dict.setting)}
                     </div>}
                 </div>
               </Button>

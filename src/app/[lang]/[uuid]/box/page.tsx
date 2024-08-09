@@ -4,10 +4,11 @@ import Header from "@/components/header";
 import TextDisplay from "@/components/textdisplay";
 import Indicator from "@/components/indicator";
 import TextField from "@/components/textfield";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { _box_getQA, _box_getUserInfo, _box_qa, _box_user } from "./actions";
 import { _profile_getPFPURL } from "../profile/actions";
 import Metadata from "@/components/metadata";
+import { useDictionary } from "../../dictionaryProvider";
 
 export default function Box({ params }: { params: { uuid: string } }) {
 
@@ -34,12 +35,17 @@ export default function Box({ params }: { params: { uuid: string } }) {
     updateData();
   }, []);
 
+  const dict = useDictionary();
+
+  function formatNewline(val: string) {
+    return val.split(/\n/).map(line => <React.Fragment key={line}>{line}<br /></React.Fragment>);
+  }
   return (
     <>
-      <Metadata title={`${name} の箱子 │ 提问の箱子`} description="" />
+      <Metadata title={`${name} の ${dict.box.box} │ ${dict.questionBox}`} description="" />
       <main className="bg-white flex justify-center min-h-screen">
         <div className="-border border-black max-w-[440px] w-3/4">
-          <Header title={name} subtitle="の箱子" url={pfp} />
+          <Header title={name} subtitle={"の" + dict.box.box} url={pfp} />
           {
             boxOpen && id !== -1 ?
               <div className="flex mt-2 mb-4">
@@ -49,9 +55,7 @@ export default function Box({ params }: { params: { uuid: string } }) {
                 <div className=" w-1/2 justify-end -border flex gap-3">
                   <Button fg="white" bg="black" shadow="darkgray" link="ask">
                     <div className="py-3 px-3 leading-4 font-semibold">
-                      我要
-                      <br />
-                      提问
+                      {formatNewline(dict.box.askQuestion)}
                     </div>
                   </Button>
                 </div>
@@ -61,20 +65,20 @@ export default function Box({ params }: { params: { uuid: string } }) {
             qa?.map((ele: _box_qa, key: number) => {
               return <TextDisplay>
                 <p className="text-[#AAAAAA] my-1">
-                  有人问：
+                  {dict.box.someoneAsked}
                 </p>
                 <p className="text-black my-2 leading-[18px] whitespace-pre-wrap">
                   {ele.question}
                 </p>
                 {ele.answer ? [
                   <p className="text-end text-[#AAAAAA] my-1">
-                    ta答说：
+                    {dict.box.theyAnswered}
                   </p>,
                   <p className="text-end text-black my-2 leading-[18px]">
                     {ele.answer}
                   </p>] : [
                   <p className="text-end text-[#AAAAAA] my-1">
-                    ta还没回。
+                    {dict.box.haventAnswered}
                   </p>
                 ]
                 }
@@ -83,32 +87,28 @@ export default function Box({ params }: { params: { uuid: string } }) {
             :
             <TextDisplay>
               <p className="text-[#AAAAAA] my-1">
-                有人说：
+                {dict.box.someoneSaid}
               </p>
               <p className="text-black my-2 leading-[18px] whitespace-pre-wrap">
-                箱子上锁了。等等再试吧。。。
+                {dict.box.boxLocked}
               </p>
             </TextDisplay>
           }
           <div className="text-center text-sm my-6 text-[#AAAAAA]">
-            到底啦，还有问题赶快问吧！
+            {dict.box.bottomOfPage}
           </div>
           <div className="flex mb-8">
             <div className="w-1/2 -border flex gap-4">
               <Button fg="black" bg="white" shadow="darkgreen" link="/login">
                 <div className="py-3 px-3 leading-4 font-semibold">
-                  领只
-                  <br />
-                  箱子
+                  {formatNewline(dict.box.getBox)}
                 </div>
               </Button>
             </div>
             <div className=" w-1/2 justify-end -border flex gap-3">
               <Button fg="white" bg="black" shadow="darkgray" link="ask">
                 <div className="py-3 px-3 leading-4 font-semibold">
-                  我要
-                  <br />
-                  提问
+                  {formatNewline(dict.box.askQuestion)}
                 </div>
               </Button>
             </div>

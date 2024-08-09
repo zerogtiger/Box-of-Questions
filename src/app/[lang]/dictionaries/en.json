@@ -1,34 +1,35 @@
 {
-  "questionBox": "Box of Questions",
-  "shareBox": "Share box",
-  "profile": "profile",
+  "questionBox": "Box of のuestions",
+  "shareBox": "Share",
+  "setting": "Settings",
   "emptyBox": "Empty box",
   "logOut": "Log out",
   "login": {
     "login": "Login",
     "username": "Username",
-    "accountUsername": "Account username",
+    "accountUsername": "username",
     "password": "Password",
-    "accountPassword": "Account password",
-    "signUp": "Sign up",
+    "accountPassword": "password",
+    "signUp": "Sign-up",
     "displayName": "Display name",
-    "ChangeName": "Changeable in settings/profile",
-    "confirmLoginPassword": "Confirm account password"
+    "changeName": "Editable in settings",
+    "confirmLoginPassword": "Confirm password"
   },
   "tribute": {
     "someoneSaid": "Someone said:",
     "madeByTiger": "Box of Questions was designed and produced by Tiger Ding.",
-    "thanksToCalina": "Special thanks to Calina Liu for her demand in such a platform, which inspired many designs.",
-    "feedback": "Please contact me through my website should any comments of suggestions arise: ",
-    "48hours": "All messages will receive a reply in 48 hours.",
-    "thanks": "Thanks you for supporting the Box of Questions.",
+    "thanksToCalina": "Special thanks to Calina Liu for her demand in such a platform, which inspired many of my designs.",
+    "feedback": "Please contact me through my website should any comments of suggestions arise via ",
+    "hours": "All messages will receive a reply from me in 48 hours.",
+    "thanks": "Thanks you for supporting the Box of のuestions.",
     "back": "Back"
   },
   "answer": {
-      "checkBox": "Checking Box",
+      "checkBox": "Checking Inbox",
       "someoneAsked": "Someone asked: ",
       "unanswered": "You haven't answered yet.",
-      "yourAnswer": "You answered: ",
+      "youAnswer": "You answer: ",
+      "yourAnswer": "Your answer",
       "youHaveAnswer": "You've answered: ",
       "youPrepareToSay": "You prepared to say: ",
       "butYouPrepareToSay": "But you prepared to say: ",
@@ -36,10 +37,14 @@
       "cancel": "Cancel",
       "delete": "Delete",
       "answer": "Answer",
+      "confirm": "Confirm",
+      "edit": "Edit",
       "hidePublish": "Hide / Publish",
       "bottomOfPage": "The end, there are no more questions!"
   },
   "ask": {
+      "askSomething": "write something",
+      "box": "uestion Inbox",
       "noMorePaper": "We ran out of paper, guess you could try again later...",
       "getBox": "Get a box",
       "checkoutBox": "Checkout their box",
@@ -47,21 +52,25 @@
   },
   "box": {
     "askQuestion": "I have a question",
+    "box": "Inbox",
     "someoneAsked": "Someone asked: ",
     "theyAnswered": "They answered: ",
     "haventAnswered": "They haven't answered.",
     "someoneSaid": "Someone said: ",
     "boxLocked": "The box got locked, guess you could try again later...",
-    "bottomOfPage": "The end, get your questions in quick!",
+    "bottomOfPage": "The end, get your questions in!",
     "getBox": "Get a box"
   },
   "profile": {
+    "settings": "の Settings",
+    "checkInbox": "Check Inbox",
     "profile": "Profile",
     "uploadPfp": "Upload picture",
     "change": "Confirm",
     "changePassword": "Change password",
+    "newPassword": "new password",
     "confirmPassword": "Confirm password",
-    "box": "Box",
+    "box": "Inbox",
     "startStopAsk": "Open / close box",
     "startStopView": "Open / close box viewing",
     "showNewQuestions": "Display new questions immediately",
@@ -70,14 +79,18 @@
     "previewBelow": "Preview below",
     "bottomOfPage": "The end, there are no more settings!",
     "cancel": "Cancel",
-    "deleteAccount": "Log out",
+    "deleteAccount": "Delete account",
     "confirm": "Confirm"
   },
   "share": {
-    "shareImage": "Have others visit your box with the QR code below:",
+    "shareImage": "Have others visit your inbox with the QR code below:",
+    "checkInbox": "Check Inbox",
+    "sharingBox": "Share Inbox",
+    "box": "uestion Inbox",
     "back": "Back",
     "checkoutBox": "Check your box",
-    "profile": "Box settings"
+    "profile": "Box settings",
+    "askQuestion": "Scan me "
   }
 }
 

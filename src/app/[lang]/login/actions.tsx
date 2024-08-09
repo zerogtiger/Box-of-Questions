@@ -1,6 +1,5 @@
 "use server"
 import { PrismaClient } from '@prisma/client'
-import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers'
 
 import { cookieHash } from '@/components/hash';
@@ -8,7 +7,6 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { getDictionary } from '../dictionaries';
 
 const prisma = new PrismaClient()
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY!);
 
 export type _login_user = {
   id: number;

@@ -8,6 +8,7 @@ import { _login_createCookie, _login_getCookies, _login_getDict, _login_loginabl
 import { hash } from "@/components/hash";
 import { useRouter } from "next/navigation";
 import Metadata from "@/components/metadata";
+import { useDictionary } from "../dictionaryProvider";
 
 
 export default function Login({ params }: { params: { lang: string } }) {
@@ -22,8 +23,6 @@ export default function Login({ params }: { params: { lang: string } }) {
   const [regPassword, setRegPassword] = useState<string>("");
   const [regPC, setRegPC] = useState<string>("");
 
-  const [dict, setDict] = useState<any>({});
-
   const router = useRouter();
 
   useEffect(() => {
@@ -33,9 +32,6 @@ export default function Login({ params }: { params: { lang: string } }) {
       if (username) {
         router.push(`/${username}/answer`);
       }
-      const curr_dict = await _login_getDict(params.lang);
-      console.log(curr_dict.products.cart);
-      setDict(curr_dict);
       return;
     };
 
@@ -76,24 +72,25 @@ export default function Login({ params }: { params: { lang: string } }) {
     }
   }
 
+  const dict = useDictionary();
+
   return (
     <>
-      <Metadata title="登录 / 注册 │ 提问の箱子" description="" />
+      <Metadata title={dict.login.login + " │ " + dict.login.signUp + " │ " + dict.questionBox} description="" />
       <main className="bg-white flex justify-center min-h-screen">
         <div className="-border border-black max-w-[440px] w-2/3">
-          <Header title={"提问の箱子"} subtitle="" />
-          { dict.products ? dict.products.cart : "" }
+          <Header title={dict.questionBox} subtitle="" />
           <div className="-border text-black text-2xl font-bold mt-2 mb-2">
-            登录 ←
+          {dict.login.login} ←
           </div>
           <div className="-border border-black text-black text-[14px] font-normal mt-2 mb-1">
-            用户名
+          {dict.login.username}
           </div>
-          <TextField maxChar={250} placeholder={"用户名登录"} rows={1} text={loginUsername} setText={setLoginUsername} />
+          <TextField maxChar={250} placeholder={dict.login.accountUsername} rows={1} text={loginUsername} setText={setLoginUsername} />
           <div className="-border border-black text-black text-[14px] font-normal mt-4 mb-1">
-            密码
+          {dict.login.password}
           </div>
-          <TextField maxChar={-1} placeholder={"账号密码"} rows={1} text={loginPassword} setText={setLoginPassword} password={true} />
+          <TextField maxChar={-1} placeholder={dict.login.accountPassword} rows={1} text={loginPassword} setText={setLoginPassword} password={true} />
           <div className="-border flex justify-end mt-4 gap-3">
             <Indicator color={loginColor} />
             <Button bg="black" fg="white" shadow="darkgray" onclick={() => login()}>
@@ -103,24 +100,24 @@ export default function Login({ params }: { params: { lang: string } }) {
             </Button>
           </div>
           <div className="-border text-black text-2xl font-bold mt-3 mb-2">
-            注册 ←
+          {dict.login.signUp} ←
           </div>
           <div className="-border border-black text-black text-[14px] font-normal mt-2 mb-1">
-            名字（匿名）
+          {dict.login.displayName}
           </div>
-          <TextField maxChar={250} placeholder={"注册后可更改"} rows={1} text={regName} setText={setRegName} />
+          <TextField maxChar={250} placeholder={dict.login.changeName} rows={1} text={regName} setText={setRegName} />
           <div className="-border border-black text-black text-[14px] font-normal mt-4 mb-1">
-            用户名
+          {dict.login.username}
           </div>
-          <TextField maxChar={250} placeholder={"账户用户名"} rows={1} text={regUsername} setText={setRegUsername} />
+          <TextField maxChar={250} placeholder={dict.login.accountUsername} rows={1} text={regUsername} setText={setRegUsername} />
           <div className="-border border-black text-black text-[14px] font-normal mt-4 mb-1">
-            密码
+          {dict.login.password}
           </div>
-          <TextField maxChar={-1} placeholder={"设置密码"} rows={1} text={regPassword} setText={setRegPassword} password={true} />
+          <TextField maxChar={-1} placeholder={dict.login.accountPassword} rows={1} text={regPassword} setText={setRegPassword} password={true} />
           <div className="-border border-black text-black text-[14px] font-normal mt-4 mb-1">
-            确认密码
+          {dict.login.confirmLoginPassword}
           </div>
-          <TextField maxChar={-1} placeholder={"确认账户密码"} rows={1} text={regPC} setText={setRegPC} password={true} />
+          <TextField maxChar={-1} placeholder={dict.login.confirmLoginPassword} rows={1} text={regPC} setText={setRegPC} password={true} />
           <div className="-border flex justify-end mt-4 mb-10 gap-3">
             <Indicator color={regColor} />
             <Button bg="black" fg="white" shadow="darkgray" onclick={() => register()}>

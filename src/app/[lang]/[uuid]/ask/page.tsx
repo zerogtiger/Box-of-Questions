@@ -4,9 +4,10 @@ import Header from "@/components/header";
 import Indicator from "@/components/indicator";
 import TextField from "@/components/textfield";
 import { _ask_getData, _ask_user, _ask_submitData } from "./actions";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { _profile_getPFPURL } from "../profile/actions";
 import Metadata from "@/components/metadata";
+import { useDictionary } from "../../dictionaryProvider";
 
 export default function Ask({ params }: { params: { uuid: string } }) {
 
@@ -45,38 +46,40 @@ export default function Ask({ params }: { params: { uuid: string } }) {
     }
   }
 
+  const dict = useDictionary();
+
+  function formatNewline(val: string) {
+    return val.split(/\n/).map(line => <React.Fragment key={line}>{line}<br /></React.Fragment>);
+  }
+
   return (
     <>
-    <Metadata title={`${name} の 提问箱 │ 提问の箱子`} description="" />
+      <Metadata title={`${name} の ${dict.ask.box} │ ${dict.questionBox}`} description="" />
       <main className="bg-white flex justify-center min-h-screen">
         <div className="-border border-black max-w-[440px] w-3/4">
-          <Header title={name} subtitle="の提问箱" url={pfp} />
+          <Header title={name} subtitle={"の" + dict.ask.box} url={pfp} />
           {
             qOpen ? [
               <div className="-border border-black text-black text-[14px] font-normal mt-6 mb-1">
                 {prompt}
               </div>,
               (id === -1 ? "" :
-                <TextField maxChar={1000} placeholder={"问点什么"} rows={6} text={question} setText={setQuestion} />)
+                <TextField maxChar={1000} placeholder={dict.ask.askSomething} rows={6} text={question} setText={setQuestion} />)
             ] :
               <div className="-border border-black text-black text-[14px] font-normal mt-6 mb-1 pb-6">
-                提问纸用完了，等等再试吧。。。
+                {dict.ask.noMorePaper}
               </div>
           }
           <div className="flex">
             <div className="w-1/2 -border flex gap-4">
               <Button fg="black" bg="white" shadow="darkgreen" link="/login">
                 <div className="py-3 px-3 leading-4 font-semibold">
-                  领只
-                  <br />
-                  箱子
+                  {formatNewline(dict.ask.getBox)}
                 </div>
               </Button>
               <Button fg="white" bg="black" shadow="darkgray" link={`box`}>
                 <div className="py-3 px-3 leading-4 font-semibold">
-                  翻ta的
-                  <br />
-                  箱子→
+                  {formatNewline(dict.ask.checkoutBox + "→")}
                 </div>
               </Button>
             </div>
@@ -86,7 +89,7 @@ export default function Ask({ params }: { params: { uuid: string } }) {
                   <Indicator color={color} />
                   <Button fg="white" bg="black" shadow="darkgray" onclick={submit} link="box">
                     <div className="py-3 px-3 leading-4 font-semibold">
-                      提交
+                      {dict.ask.submit}
                       <br />
                       -⟶
                     </div>

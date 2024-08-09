@@ -1,9 +1,9 @@
 {
   "questionBox": "提问の箱子",
-  "shareBox": "分享箱子",
-  "profile": "",
-  "emptyBox": "",
-  "logOut": "",
+  "shareBox": "分享\n箱子",
+  "setting": "设置\n箱子",
+  "emptyBox": "清空\n箱子",
+  "logOut": "退出\n登录",
   "login": {
     "login": "登录",
     "username": "用户名",
@@ -12,7 +12,7 @@
     "accountPassword": "账号密码",
     "signUp": "注册",
     "displayName": "名字（匿名）",
-    "ChangeName": "注册后可更改",
+    "changeName": "注册后可更改",
     "confirmLoginPassword": "确认账号密码"
   },
   "tribute": {
@@ -20,7 +20,7 @@
     "madeByTiger": "提问の箱子由 Tiger🞄丁 设计并制作。",
     "thanksToCalina": "特此鸣谢 Calina🞄刘 对匿名提问箱的需求，及借此提供的灵感。",
     "feedback": "如有意见或建议，请通过个人网站联系：",
-    "48hours": "所有信息一律48小时内作答。",
+    "hours": "所有信息一律48小时内作答。",
     "thanks": "感谢您对提问の箱子的支持。",
     "back": "返回"
   },
@@ -28,39 +28,48 @@
       "checkBox": "查看箱子ING",
       "someoneAsked": "有人问：",
       "unanswered": "您未回答。",
-      "yourAnswer": "您答说：",
+      "youAnswer": "您答说：",
+      "yourAnswer": "您的回答",
       "youHaveAnswer": "您回答说：",
       "youPrepareToSay": "您准备回答：",
       "butYouPrepareToSay": "但您准备说：",
-      "save": "删除",
+      "save": "保存",
       "cancel": "取消",
       "delete": "删除",
       "answer": "回答",
+      "confirm": "保存",
+      "edit": "修改",
       "hidePublish": "隐藏 / 发布",
       "bottomOfPage": "到底啦，没有更多问题啦！"
   },
   "ask": {
+      "askSomething": "问点什么",
+      "box": "提问箱",
       "noMorePaper": "提问纸用完了，等等再试吧。。。",
-      "getBox": "领只箱子",
+      "getBox": "领只\n箱子",
       "checkoutBox": "翻ta的箱子",
       "submit": "提交"
   },
   "box": {
-    "askQuestion": "我要提问",
+    "askQuestion": "我要\n提问",
+    "box": "箱子",
     "someoneAsked": "有人问：",
     "theyAnswered": "ta答说：",
     "haventAnswered": "ta还没回。",
     "someoneSaid": "有人说：",
     "boxLocked": "箱子上锁了。等等再试吧。。。",
     "bottomOfPage": "到底啦，还有问题赶快问吧！",
-    "getBox": "领只箱子"
+    "getBox": "领只\n箱子"
   },
   "profile": {
+    "settings": "设置箱子ING",
+    "checkInbox": "查看\n箱子",
     "profile": "账号",
     "uploadPfp": "上传头像",
     "change": "更换",
     "changePassword": "更换密码",
-    "confirmPassword": "确认密码",
+    "newPassword": "设置密码",
+    "confirmPassword": "确认账户密码",
     "box": "箱子",
     "startStopAsk": "开启 / 停用提问",
     "startStopView": "开启 / 停用查看",
@@ -70,13 +79,16 @@
     "previewBelow": "预览如下",
     "bottomOfPage": "到底啦，没有更多设置啦！",
     "cancel": "取消",
-    "deleteAccount": "退出登录",
+    "deleteAccount": "删除\n账号",
     "confirm": "确认"
   },
   "share": {
     "shareImage": "分享此图片以分享提问箱：",
+    "checkInbox": "查看\n箱子",
+    "sharingBox": "分享箱子ING",
     "back": "返回",
-    "checkoutBox": "查看箱子",
-    "profile": "设置箱子"
+    "checkoutBox": "查看\n箱子",
+    "profile": "设置\n箱子",
+    "askQuestion": "我要提问"
   }
 }

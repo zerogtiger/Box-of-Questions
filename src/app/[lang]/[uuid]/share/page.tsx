@@ -1,13 +1,14 @@
 "use client"
 import Button from "@/components/button";
 import Header from "@/components/header";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { default as IMAGE } from "next/image";
 import { _profile_getPFPURL, _profile_user, _profile_getUserInfo } from "../profile/actions";
 import { _login_deleteCookie, _login_getCookies } from "../../login/actions";
 import { _answer_checkPassword } from "../answer/actions";
 import Metadata from "@/components/metadata";
+import { useDictionary } from "../../dictionaryProvider";
 
 
 export default function Share({ params }: { params: { uuid: string, pwd: string } }) {
@@ -104,14 +105,14 @@ export default function Share({ params }: { params: { uuid: string, pwd: string 
         ctx.fillText("↓", 60, 100);
         ctx.fillText(user.name, 60, 190);
         ctx.font = "bold 40px inter";
-        ctx.fillText("の提问箱", 60, 250);
+        ctx.fillText("の" + dict.share.box, 60, 250);
         // ctx.fillText(user.q_header, 70, 250);
         ctx.font = "normal 30px inter";
         wrapText(ctx, user.q_header, 60, 310, 560, 30);
         ctx.lineWidth = 3;
         roundedRect(ctx, 60, 350, 60, 60, 20, "↓", 0);
         roundedRect(ctx, 140, 350, 140, 60, 20, "----->", 0);
-        roundedRect(ctx, 60, 430, 220, 60, 20, "我要提问 ⟶", 0);
+        roundedRect(ctx, 60, 430, 220, 60, 20, dict.share.askQuestion + "⟶", 0);
         roundedRect(ctx, 60, 510, 140, 140, 20, "↓----> ------> ->-->->↗", 0);
         roundedRect(ctx, 220, 510, 60, 60, 20, "↑", 0);
         roundedRect(ctx, 220, 590, 60, 60, 20, "⟶", 0);
@@ -194,15 +195,20 @@ export default function Share({ params }: { params: { uuid: string, pwd: string 
     verifyPassword();
   }, []);
 
+  const dict = useDictionary();
+
+  function formatNewline(val: string) {
+    return val.split(/\n/).map(line => <React.Fragment key={line}>{line}<br /></React.Fragment>);
+  }
   return (
     <>
-      <Metadata title={`${name} 分享箱子ING │ 提问の箱子`} description="" />
+      <Metadata title={`${name} ${dict.share.sharingBox} │ ${dict.questionBox}`} description="" />
       <main className="bg-white min-h-screen">
         <div className="flex justify-center ">
           <div className="-border border-black max-w-[440px] w-3/4">
-            <Header title={name} subtitle="分享箱子ING" url={pfp} />
+            <Header title={name} subtitle={dict.share.sharingBox} url={pfp} />
             <div className="pt-4 pb-2">
-              分享此图片以分享提问箱：
+              {dict.share.shareImage}
             </div>
             <IMAGE id="qr_code" className="w-full mt-2 mb-4 grayshadow" width={360} height={360} src={shareSrc} alt="Share QR code" />
           </div>
@@ -215,7 +221,7 @@ export default function Share({ params }: { params: { uuid: string, pwd: string 
                 <Button fg="white" bg="black" shadow="darkgray" onclick={() => router.back()}>
                   <div className="py-3 px-3 leading-4 font-semibold">
                     <div>
-                      返回
+                      {dict.share.back}
                       <br />
                       ⟵-
                     </div>
@@ -226,18 +232,14 @@ export default function Share({ params }: { params: { uuid: string, pwd: string 
                 <Button fg="white" bg="black" shadow="darkgray" link="answer">
                   <div className="py-3 px-3 leading-4 font-semibold">
                     <div>
-                      查看
-                      <br />
-                      箱子
+                      {formatNewline(dict.share.checkInbox)}
                     </div>
                   </div>
                 </Button>
                 <Button fg="white" bg="black" shadow="darkgray" link="profile">
                   <div className="py-3 px-3 leading-4 font-semibold">
                     <div>
-                      设置
-                      <br />
-                      箱子
+                      {formatNewline(dict.share.profile)}
                     </div>
                   </div>
                 </Button>

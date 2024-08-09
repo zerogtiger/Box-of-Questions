@@ -3,7 +3,7 @@ import Button from "@/components/button";
 import Header from "@/components/header";
 import Indicator from "@/components/indicator";
 import TextField from "@/components/textfield";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { _profile_deleteAccount, _profile_getPFPURL, _profile_getUserInfo, _profile_setNewName, _profile_setNewPrompt, _profile_toggleBox, _profile_togglePostNew, _profile_toggleQOpen, _profile_updatePassword, _profile_user } from "./actions";
 import { useRouter } from "next/navigation";
 import { default as IMAGE } from "next/image";
@@ -12,6 +12,7 @@ import { createClient } from '@supabase/supabase-js'
 import { _login_deleteCookie } from "../../login/actions";
 import { _answer_checkPassword } from "../answer/actions";
 import Metadata from "@/components/metadata";
+import { useDictionary } from "../../dictionaryProvider";
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY!);
 
@@ -299,30 +300,31 @@ export default function Profile({ params }: { params: { uuid: string } }) {
     }
   }
 
+  const dict = useDictionary();
+
+  function formatNewline(val: string) {
+    return val.split(/\n/).map(line => <React.Fragment key={line}>{line}<br /></React.Fragment>);
+  }
   return (
     <>
-      <Metadata title={`${name} 设置箱子ING │ 提问の箱子`} description="" />
+      <Metadata title={`${name} ${dict.profile.settings} │ ${dict.questionBox}`} description="" />
       <main className="bg-white min-h-screen">
         <div className="flex justify-center ">
           <div className="-border border-black max-w-[440px] w-3/4">
-            <Header title={name} subtitle="设置箱子ING" url={pfp} />
+            <Header title={name} subtitle={dict.profile.settings} url={pfp} />
             <div className="-border flex mt-2 mb-4 h-fit">
               <div className="w-1/2 -border gap-4 font-bold text-2xl flex items-end">
-                账号 ⟵
+                {dict.profile.profile} ⟵
               </div>
               <div className=" w-1/2 justify-end -border flex gap-3">
                 <Button fg="white" bg="black" shadow="darkgray" link="share">
                   <div className="-border py-3 px-3 leading-4 font-semibold">
-                    分享
-                    <br />
-                    箱子
+                    {formatNewline(dict.shareBox)}
                   </div>
                 </Button>
                 <Button fg="white" bg="black" shadow="darkgray" link="answer">
                   <div className="py-3 px-3 leading-4 font-semibold">
-                    查看
-                    <br />
-                    箱子
+                    {formatNewline(dict.profile.checkInbox)}
                   </div>
                 </Button>
               </div>
@@ -334,7 +336,7 @@ export default function Profile({ params }: { params: { uuid: string } }) {
                   <Indicator color={pfpInd} />
                   <Button fg="white" bg="black" shadow="darkgray">
                     <label className="px-5 leading-6 font-semibold" htmlFor="file_input">
-                      ⟵ 上传头像
+                      ⟵ {dict.profile.uploadPfp}
                     </label>
                   </Button>
                 </div>
@@ -342,7 +344,7 @@ export default function Profile({ params }: { params: { uuid: string } }) {
                   <Indicator color={pfpUploadInd} />
                   <Button fg="white" bg="black" shadow="darkgray" onclick={() => setPFPUploadInd("yellow")}>
                     <button className="px-5 leading-6 font-semibold" type="submit">
-                      ⟵ 更换
+                      ⟵ {dict.profile.change}
                     </button>
                   </Button>
                 </div>
@@ -357,24 +359,24 @@ export default function Profile({ params }: { params: { uuid: string } }) {
               </form>
             </div>
             <div className="-border border-black text-black text-[14px] font-normal mt-4 mb-1">
-              更换密码
+              {dict.profile.changePassword}
             </div>
-            <TextField maxChar={-1} placeholder={"设置密码"} rows={1} text={newPassword} setText={setNewPassword} password={true} />
+            <TextField maxChar={-1} placeholder={dict.profile.newPassword} rows={1} text={newPassword} setText={setNewPassword} password={true} />
             <div className="-border border-black text-black text-[14px] font-normal mt-4 mb-1">
-              确认密码
+              {dict.profile.confirmPassword}
             </div>
-            <TextField maxChar={-1} placeholder={"确认账户密码"} rows={1} text={confirmPassword} setText={setConfirmPassword} password={true} />
+            <TextField maxChar={-1} placeholder={dict.profile.confirmPassword} rows={1} text={confirmPassword} setText={setConfirmPassword} password={true} />
             <div className="flex justify-end gap-3 pb-2 ">
               <Indicator color={passwordInd} />
               <Button fg="white" bg="black" shadow="darkgray" onclick={changePassword}>
                 <div className="px-5 leading-6 font-semibold">
-                  更换 ⟶
+                  {dict.profile.change} ⟶
                 </div>
               </Button>
             </div>
             <div className="-border flex mt-2 mb-4 h-fit">
               <div className="w-1/2 -border gap-4 font-bold text-2xl flex items-end">
-                箱子 ⟵
+                {dict.profile.box} ⟵
               </div>
             </div>
             <div className="-border flex mt-2 mb-4 h-fit">
@@ -386,7 +388,7 @@ export default function Profile({ params }: { params: { uuid: string } }) {
               <div className=" w-1/2 justify-end -border flex gap-3">
                 <Button fg="white" bg="black" shadow="darkgray" onclick={toggleQOpen}>
                   <div className="px-3 leading-6 font-semibold">
-                    ⟵ 开启 / 停用提问
+                    ⟵ {dict.profile.startStopAsk}
                   </div>
                 </Button>
               </div>
@@ -400,7 +402,7 @@ export default function Profile({ params }: { params: { uuid: string } }) {
               <div className=" w-1/2 justify-end -border flex gap-3">
                 <Button fg="white" bg="black" shadow="darkgray" onclick={toggleBoxOpen}>
                   <div className="px-3 leading-6 font-semibold">
-                    ⟵ 开启 / 停用查看
+                    ⟵ {dict.profile.startStopView}
                   </div>
                 </Button>
               </div>
@@ -414,36 +416,36 @@ export default function Profile({ params }: { params: { uuid: string } }) {
               <div className=" w-1/2 justify-end -border flex gap-3">
                 <Button fg="white" bg="black" shadow="darkgray" onclick={togglePostNew}>
                   <div className="px-3 leading-6 font-semibold">
-                    ⟵ 在箱中显示新问题
+                    ⟵ {dict.profile.showNewQuestions}
                   </div>
                 </Button>
               </div>
             </div>
             <div className="-border border-black text-black text-[14px] font-normal mt-2 mb-1">
-              名字（匿名）
+              {dict.profile.displayName}
             </div>
             <TextField maxChar={250} placeholder={"显示名"} rows={1} text={newName} setText={setNewName} />
             <div className="flex justify-end gap-3 ">
               <Indicator color={nameInd} />
               <Button fg="white" bg="black" shadow="darkgray" onclick={changeName}>
                 <div className="px-5 leading-6 font-semibold">
-                  更换 ⟶
+                  {dict.profile.change} ⟶
                 </div>
               </Button>
             </div>
             <div className="-border border-black text-black text-[14px] font-normal mt-2 mb-1">
-              提问箱提示
+              {dict.profile.boxPrompt}
             </div>
             <TextField maxChar={1000} placeholder={"想让ta问什么问题呢？"} rows={6} text={newPrompt} setText={setNewPrompt} />
             <div className="flex">
               <div className="w-1/2 text-sm leading-none">
-                ↓预览如下
+                ↓ {dict.profile.previewBelow}
               </div>
               <div className="w-1/2 flex justify-end gap-3 ">
                 <Indicator color={promptInd} />
                 <Button fg="white" bg="black" shadow="darkgray" onclick={changePrompt}>
                   <div className="px-5 leading-6 font-semibold">
-                    更换 ⟶
+                    {dict.profile.change} ⟶
                   </div>
                 </Button>
               </div>
@@ -453,7 +455,7 @@ export default function Profile({ params }: { params: { uuid: string } }) {
 
         <div className="mt-4 pb-3 bg-[#EFEFEF] flex justify-center">
           <div className="-border border-black max-w-[440px] w-3/4">
-            <Header title={newName} subtitle="の提问箱" url={pfp} />
+            <Header title={newName} subtitle={"の" + dict.ask.box} url={pfp} />
             <div className="-border border-black text-black text-[14px] font-normal mt-6 mb-1">
               {newPrompt}
             </div>
@@ -463,7 +465,7 @@ export default function Profile({ params }: { params: { uuid: string } }) {
         <div className="flex justify-center ">
           <div className="-border border-black max-w-[440px] w-3/4">
             <div className="text-center text-sm my-6 text-[#AAAAAA]">
-              到底啦，没有更多设置啦！
+              {dict.profile.bottomOfPage}
             </div>
             <div className="flex mb-8">
               <div className="w-1/2 -border flex gap-4">
@@ -472,48 +474,40 @@ export default function Profile({ params }: { params: { uuid: string } }) {
                     {
                       confirmDel ?
                         <div>
-                          取消
+                          {dict.profile.cancel}
                           < br />
                           ⟵-
                         </div>
                         :
                         <div>
-                          删除
-                          <br />
-                          账号
+                          {formatNewline(dict.profile.deleteAccount)}
                         </div>
                     }
                   </div>
                 </Button>
                 <Button fg="black" bg="white" shadow="darkred" onclick={logOut}>
                   <div className="py-3 px-3 leading-4 font-semibold">
-                    退出
-                    <br />
-                    登录
+                    {formatNewline(dict.logOut)}
                   </div>
                 </Button>
               </div>
               <div className=" w-1/2 justify-end -border flex gap-3">
                 <Button fg="white" bg="black" shadow="darkgray" link="share">
                   <div className="-border py-3 px-3 leading-4 font-semibold">
-                    分享
-                    <br />
-                    箱子
+                    {formatNewline(dict.shareBox)}
                   </div>
                 </Button>
                 <Button fg="white" bg={confirmDel ? "darkred" : "black"} shadow={confirmDel ? "black" : "darkgray"} onclick={viewBox}>
                   <div className="py-3 px-3 leading-4 font-semibold">
                     {confirmDel ?
                       <div>
-                        确认
+                        {dict.profile.confirm}
                         <br />
                         ⟶-
                       </div>
                       :
                       <div>
-                        查看
-                        <br />
-                        箱子
+                        {formatNewline(dict.profile.checkInbox)}
                       </div>
                     }
                   </div>
