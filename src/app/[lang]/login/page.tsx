@@ -4,13 +4,13 @@ import Header from "@/components/header";
 import Indicator from "@/components/indicator";
 import TextField from "@/components/textfield";
 import { useEffect, useState } from "react";
-import { _login_createCookie, _login_getCookies, _login_loginable, _login_registerable } from "./actions";
+import { _login_createCookie, _login_getCookies, _login_getDict, _login_loginable, _login_registerable } from "./actions";
 import { hash } from "@/components/hash";
 import { useRouter } from "next/navigation";
 import Metadata from "@/components/metadata";
 
 
-export default function Login() {
+export default function Login({ params }: { params: { lang: string } }) {
   const [loginColor, setLoginColor] = useState<string>("gray");
   const [regColor, setRegColor] = useState<string>("gray");
 
@@ -22,6 +22,8 @@ export default function Login() {
   const [regPassword, setRegPassword] = useState<string>("");
   const [regPC, setRegPC] = useState<string>("");
 
+  const [dict, setDict] = useState<any>({});
+
   const router = useRouter();
 
   useEffect(() => {
@@ -31,6 +33,9 @@ export default function Login() {
       if (username) {
         router.push(`/${username}/answer`);
       }
+      const curr_dict = await _login_getDict(params.lang);
+      console.log(curr_dict.products.cart);
+      setDict(curr_dict);
       return;
     };
 
@@ -77,6 +82,7 @@ export default function Login() {
       <main className="bg-white flex justify-center min-h-screen">
         <div className="-border border-black max-w-[440px] w-2/3">
           <Header title={"提问の箱子"} subtitle="" />
+          { dict.products ? dict.products.cart : "" }
           <div className="-border text-black text-2xl font-bold mt-2 mb-2">
             登录 ←
           </div>

@@ -1,0 +1,83 @@
+{
+  "questionBox": "Box of Questions",
+  "shareBox": "Share box",
+  "profile": "profile",
+  "emptyBox": "Empty box",
+  "logOut": "Log out",
+  "login": {
+    "login": "Login",
+    "username": "Username",
+    "accountUsername": "Account username",
+    "password": "Password",
+    "accountPassword": "Account password",
+    "signUp": "Sign up",
+    "displayName": "Display name",
+    "ChangeName": "Changeable in settings/profile",
+    "confirmLoginPassword": "Confirm account password"
+  },
+  "tribute": {
+    "someoneSaid": "Someone said:",
+    "madeByTiger": "Box of Questions was designed and produced by Tiger Ding.",
+    "thanksToCalina": "Special thanks to Calina Liu for her demand in such a platform, which inspired many designs.",
+    "feedback": "Please contact me through my website should any comments of suggestions arise: ",
+    "48hours": "All messages will receive a reply in 48 hours.",
+    "thanks": "Thanks you for supporting the Box of Questions.",
+    "back": "Back"
+  },
+  "answer": {
+      "checkBox": "Checking Box",
+      "someoneAsked": "Someone asked: ",
+      "unanswered": "You haven't answered yet.",
+      "yourAnswer": "You answered: ",
+      "youHaveAnswer": "You've answered: ",
+      "youPrepareToSay": "You prepared to say: ",
+      "butYouPrepareToSay": "But you prepared to say: ",
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "answer": "Answer",
+      "hidePublish": "Hide / Publish",
+      "bottomOfPage": "The end, there are no more questions!"
+  },
+  "ask": {
+      "noMorePaper": "We ran out of paper, guess you could try again later...",
+      "getBox": "Get a box",
+      "checkoutBox": "Checkout their box",
+      "submit": "Submit"
+  },
+  "box": {
+    "askQuestion": "I have a question",
+    "someoneAsked": "Someone asked: ",
+    "theyAnswered": "They answered: ",
+    "haventAnswered": "They haven't answered.",
+    "someoneSaid": "Someone said: ",
+    "boxLocked": "The box got locked, guess you could try again later...",
+    "bottomOfPage": "The end, get your questions in quick!",
+    "getBox": "Get a box"
+  },
+  "profile": {
+    "profile": "Profile",
+    "uploadPfp": "Upload picture",
+    "change": "Confirm",
+    "changePassword": "Change password",
+    "confirmPassword": "Confirm password",
+    "box": "Box",
+    "startStopAsk": "Open / close box",
+    "startStopView": "Open / close box viewing",
+    "showNewQuestions": "Display new questions immediately",
+    "displayName": "Display name",
+    "boxPrompt": "Question prompt",
+    "previewBelow": "Preview below",
+    "bottomOfPage": "The end, there are no more settings!",
+    "cancel": "Cancel",
+    "deleteAccount": "Log out",
+    "confirm": "Confirm"
+  },
+  "share": {
+    "shareImage": "Have others visit your box with the QR code below:",
+    "back": "Back",
+    "checkoutBox": "Check your box",
+    "profile": "Box settings"
+  }
+}
+

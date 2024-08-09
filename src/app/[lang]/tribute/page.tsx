@@ -5,16 +5,16 @@ import TextDisplay from "@/components/textdisplay";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-export default function Home() {
+export default function Home({ params }: { params: { lang: string }}) {
 
-  const { version } = require('../../../package.json');
+  const { version } = require('../../../../package.json');
 
   const router = useRouter();
 
   return (
     <main className="bg-white flex justify-center min-h-screen">
       <div className="-border border-black max-w-[440px] w-2/3">
-        <Header title={"提问の箱子"} subtitle="" tribute={true}  />
+        <Header title={"提问の箱子"} subtitle="" tribute={true} />
         <div className="border border-black mt-2 my-5 bg-[#EEEEEE] w-fit px-3 py-[1px] rounded-[10px] text-sm font-semibold grayshadow">
           {version}
         </div>

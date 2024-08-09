@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { _answer_answer, _answer_changePosted, _answer_checkPassword, _answer_clearBox, _answer_getQA, _answer_getUserInfo, _answer_qa, _answer_remove, _answer_user } from "./actions";
 import { useRouter } from "next/navigation";
 import { _profile_deleteAccount, _profile_getPFPURL } from "../profile/actions";
-import { _login_deleteCookie } from "@/app/login/actions";
+import { _login_deleteCookie } from "../../login/actions";
 import Metadata from "@/components/metadata";
 
 export default function Answer({ params }: { params: { uuid: string } }) {

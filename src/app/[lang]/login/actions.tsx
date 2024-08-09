@@ -5,6 +5,7 @@ import { cookies } from 'next/headers'
 
 import { cookieHash } from '@/components/hash';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { getDictionary } from '../dictionaries';
 
 const prisma = new PrismaClient()
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY!);
@@ -14,6 +15,11 @@ export type _login_user = {
   name: string;
   password: string;
 };
+
+export async function _login_getDict(lang: string) {
+  const dict = await getDictionary(lang); // en
+  return dict;
+}
 
 export async function _login_getCookies() {
   try {

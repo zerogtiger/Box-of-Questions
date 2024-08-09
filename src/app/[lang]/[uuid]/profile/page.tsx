@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { default as IMAGE } from "next/image";
 import { hash } from "@/components/hash";
 import { createClient } from '@supabase/supabase-js'
-import { _login_deleteCookie } from "@/app/login/actions";
+import { _login_deleteCookie } from "../../login/actions";
 import { _answer_checkPassword } from "../answer/actions";
 import Metadata from "@/components/metadata";
 
