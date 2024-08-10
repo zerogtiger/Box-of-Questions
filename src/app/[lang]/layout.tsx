@@ -24,7 +24,7 @@ export default async function RootLayout({
           {children}
         </DictionaryProvider>
         <footer>
-          <Footer />
+          <Footer lang={params.lang}/>
         </footer>
       </body>
     </html>

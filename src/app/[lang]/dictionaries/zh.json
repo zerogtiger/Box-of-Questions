@@ -47,7 +47,7 @@
       "box": "提问箱",
       "noMorePaper": "提问纸用完了，等等再试吧。。。",
       "getBox": "领只\n箱子",
-      "checkoutBox": "翻ta的箱子",
+      "checkoutBox": "翻ta的\n箱子",
       "submit": "提交"
   },
   "box": {
@@ -80,7 +80,9 @@
     "bottomOfPage": "到底啦，没有更多设置啦！",
     "cancel": "取消",
     "deleteAccount": "删除\n账号",
-    "confirm": "确认"
+    "confirm": "确认",
+    "whatAsk": "想让ta问什么问题呢？",
+    "theirQuestion": "ta的问题"
   },
   "share": {
     "shareImage": "分享此图片以分享提问箱：",

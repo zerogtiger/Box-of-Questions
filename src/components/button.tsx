@@ -4,17 +4,18 @@ import { bgColor } from "./color"
 import { shadowColor } from "./color"
 import Link from "next/link"
 
-export default function Button({ fg, bg, shadow, children, onclick, link }:
+export default function Button({ fg, bg, shadow, children, onclick, link, minHeight }:
   {
     fg: string,
     bg: string,
     shadow: string,
     children: ReactNode,
     onclick?: (() => void) | undefined,
-    link?: string
+    link?: string,
+    minHeight?: string
   }) {
 
-  const twclassname = `flex items-center align-middle border border-black w-fit rounded-[10px] text-sm font-semibold ${fgColor[fg]} ${bgColor[bg]} ${shadowColor[shadow]} cursor-pointer`
+  const twclassname = `flex items-center align-middle border border-black w-fit rounded-[10px] text-sm font-semibold ${fgColor[fg]} ${bgColor[bg]} ${shadowColor[shadow]} cursor-pointer ${minHeight? minHeight : ""}`
 
   return link ? (
     <Link href={link}>

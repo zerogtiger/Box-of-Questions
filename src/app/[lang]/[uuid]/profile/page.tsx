@@ -424,7 +424,7 @@ export default function Profile({ params }: { params: { uuid: string } }) {
             <div className="-border border-black text-black text-[14px] font-normal mt-2 mb-1">
               {dict.profile.displayName}
             </div>
-            <TextField maxChar={250} placeholder={"显示名"} rows={1} text={newName} setText={setNewName} />
+            <TextField maxChar={250} placeholder={dict.profile.displayName} rows={1} text={newName} setText={setNewName} />
             <div className="flex justify-end gap-3 ">
               <Indicator color={nameInd} />
               <Button fg="white" bg="black" shadow="darkgray" onclick={changeName}>
@@ -436,7 +436,7 @@ export default function Profile({ params }: { params: { uuid: string } }) {
             <div className="-border border-black text-black text-[14px] font-normal mt-2 mb-1">
               {dict.profile.boxPrompt}
             </div>
-            <TextField maxChar={1000} placeholder={"想让ta问什么问题呢？"} rows={6} text={newPrompt} setText={setNewPrompt} />
+            <TextField maxChar={1000} placeholder={dict.profile.whatAsk} rows={6} text={newPrompt} setText={setNewPrompt} />
             <div className="flex">
               <div className="w-1/2 text-sm leading-none">
                 ↓ {dict.profile.previewBelow}
@@ -459,7 +459,7 @@ export default function Profile({ params }: { params: { uuid: string } }) {
             <div className="-border border-black text-black text-[14px] font-normal mt-6 mb-1">
               {newPrompt}
             </div>
-            <TextField maxChar={1000} placeholder={"ta的问题"} rows={6} text={question} setText={setQuestion} />
+            <TextField maxChar={1000} placeholder={dict.profile.theirQuestion} rows={6} text={question} setText={setQuestion} />
           </div>
         </div>
         <div className="flex justify-center ">

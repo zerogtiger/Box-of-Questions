@@ -30,7 +30,7 @@ export default function Login({ params }: { params: { lang: string } }) {
       // console.log("hi");
       const username = await _login_getCookies();
       if (username) {
-        router.push(`/${username}/answer`);
+        router.push(`/${params.lang}/${username}/answer`);
       }
       return;
     };
@@ -44,7 +44,7 @@ export default function Login({ params }: { params: { lang: string } }) {
     if (loginable) {
       setLoginColor("lightgreen");
       await _login_createCookie(loginable);
-      router.push("/" + loginUsername + "/answer");
+      router.push("/" + params.lang + "/" + loginUsername + "/answer");
     }
     else {
       setLoginPassword("");
@@ -61,7 +61,7 @@ export default function Login({ params }: { params: { lang: string } }) {
       if (regable) {
         setRegColor("lightgreen");
         await _login_createCookie(regable);
-        router.push("/" + regUsername + "/profile");
+        router.push("/" + params.lang + "/" + regUsername + "/profile");
       }
       else {
         setRegColor("lightred");

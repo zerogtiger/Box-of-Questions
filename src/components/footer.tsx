@@ -1,7 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 
-export default function Footer() {
+export default function Footer({ lang }: { lang: string }) {
 
   const { version } = require('../../package.json');
 
@@ -10,7 +10,7 @@ export default function Footer() {
       <div className="max-h-[100vh] min-h-[100vh] w-full fixed bg-black z-[-1]">
       </div>
       <Link
-        href={"/tribute"}
+        href={`/${lang}/tribute`}
         className="cursor-pointer">
         <div className="flex -border w-fit text-[11px] items-center text-[#7c7c7c] font-semibold">
           <Image
@@ -20,7 +20,7 @@ export default function Footer() {
             width={20}
             height={20}
             priority />
-          提问の箱子 | {version}
+            {lang == "en" ? "Box of のuestions" :  "提问の箱子"} | {version}
         </div>
       </Link>
     </div>

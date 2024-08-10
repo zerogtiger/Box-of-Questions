@@ -2,7 +2,7 @@
   "questionBox": "Box of のuestions",
   "shareBox": "Share",
   "setting": "Settings",
-  "emptyBox": "Empty box",
+  "emptyBox": "Empty Inbox",
   "logOut": "Log out",
   "login": {
     "login": "Login",
@@ -17,11 +17,11 @@
   },
   "tribute": {
     "someoneSaid": "Someone said:",
-    "madeByTiger": "Box of Questions was designed and produced by Tiger Ding.",
-    "thanksToCalina": "Special thanks to Calina Liu for her demand in such a platform, which inspired many of my designs.",
+    "madeByTiger": "Box of のuestions was designed and produced by Tiger🞄丁.",
+    "thanksToCalina": "Special thanks to Calina L. for her demand in such a platform, which inspired many of my designs.",
     "feedback": "Please contact me through my website should any comments of suggestions arise via ",
-    "hours": "All messages will receive a reply from me in 48 hours.",
-    "thanks": "Thanks you for supporting the Box of のuestions.",
+    "hours": "All messages will receive a reply from me within 48 hours.",
+    "thanks": "Thank you for supporting the Box of のuestions.",
     "back": "Back"
   },
   "answer": {
@@ -40,56 +40,58 @@
       "confirm": "Confirm",
       "edit": "Edit",
       "hidePublish": "Hide / Publish",
-      "bottomOfPage": "The end, there are no more questions!"
+      "bottomOfPage": "THE END. No more questions!"
   },
   "ask": {
       "askSomething": "write something",
       "box": "uestion Inbox",
       "noMorePaper": "We ran out of paper, guess you could try again later...",
-      "getBox": "Get a box",
-      "checkoutBox": "Checkout their box",
+      "getBox": "Grab \na box",
+      "checkoutBox": "Check \nInbox",
       "submit": "Submit"
   },
   "box": {
-    "askQuestion": "I have a question",
+    "askQuestion": "Ask now",
     "box": "Inbox",
     "someoneAsked": "Someone asked: ",
     "theyAnswered": "They answered: ",
     "haventAnswered": "They haven't answered.",
     "someoneSaid": "Someone said: ",
     "boxLocked": "The box got locked, guess you could try again later...",
-    "bottomOfPage": "The end, get your questions in!",
+    "bottomOfPage": "THE END. Get your questions in!",
     "getBox": "Get a box"
   },
   "profile": {
     "settings": "の Settings",
-    "checkInbox": "Check Inbox",
+    "checkInbox": "Inbox",
     "profile": "Profile",
-    "uploadPfp": "Upload picture",
+    "uploadPfp": "Upload PFP",
     "change": "Confirm",
     "changePassword": "Change password",
     "newPassword": "new password",
     "confirmPassword": "Confirm password",
     "box": "Inbox",
-    "startStopAsk": "Open / close box",
-    "startStopView": "Open / close box viewing",
-    "showNewQuestions": "Display new questions immediately",
+    "startStopAsk": "Allow submissions",
+    "startStopView": "Inbox viewing",
+    "showNewQuestions": "Auto-display Questions",
     "displayName": "Display name",
     "boxPrompt": "Question prompt",
     "previewBelow": "Preview below",
-    "bottomOfPage": "The end, there are no more settings!",
+    "bottomOfPage": "THE END. No more settings!",
     "cancel": "Cancel",
-    "deleteAccount": "Delete account",
-    "confirm": "Confirm"
+    "deleteAccount": "Delete\naccount",
+    "confirm": "Confirm",
+    "whatAsk": "What should they ask about?",
+    "theirQuestion": "Their question"
   },
   "share": {
-    "shareImage": "Have others visit your inbox with the QR code below:",
-    "checkInbox": "Check Inbox",
+    "shareImage": "Share your のuestion inbox with others with this QR code: ",
+    "checkInbox": "Inbox",
     "sharingBox": "Share Inbox",
     "box": "uestion Inbox",
     "back": "Back",
-    "checkoutBox": "Check your box",
-    "profile": "Box settings",
+    "checkoutBox": "your box",
+    "profile": "Settings",
     "askQuestion": "Scan me "
   }
 }
