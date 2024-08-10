@@ -57,7 +57,7 @@ export default function Box({ params }: { params: { lang: string, uuid: string }
                 </div>
                 <div className={langCond("w-2/3 flex justify-end gap-3 mt-4", " w-1/2 justify-end -border flex gap-3")}>
                   <Button fg="white" bg="black" shadow="darkgray" link="ask">
-                    <div className={langCond("py-[2px] px-4", "py-3 px-3 leading-4 font-semibold")}>
+                    <div className={langCond("py-[2px] px-4 font-semibold", "py-3 px-3 leading-4 font-semibold")}>
                       {formatNewline(dict.box.askQuestion)}
                     </div>
                   </Button>
@@ -103,14 +103,14 @@ export default function Box({ params }: { params: { lang: string, uuid: string }
           <div className={langCond("flex flex-col-reverse mb-8 items-end gap-3", "flex mb-8")}>
             <div className={langCond("w-full flex flex-col items-end", "w-1/2 -border flex gap-4")}>
               <Button fg="black" bg="white" shadow="darkgreen" link="/login">
-                <div className={langCond("py-[2px] px-4", "py-3 px-3 leading-4 font-semibold")}>
+                <div className={langCond("py-[2px] px-4 font-semibold", "py-3 px-3 leading-4 font-semibold")}>
                   {formatNewline(dict.box.getBox)}
                 </div>
               </Button>
             </div>
             <div className={langCond("w-full flex flex-col items-end", " w-1/2 justify-end -border flex gap-3")}>
               <Button fg="white" bg="black" shadow="darkgray" link="ask">
-                <div className={langCond("py-[2px] px-4", "py-3 px-3 leading-4 font-semibold")}>
+                <div className={langCond("py-[2px] px-4 font-semibold", "py-3 px-3 leading-4 font-semibold")}>
                   {formatNewline(dict.box.askQuestion)}
                 </div>
               </Button>

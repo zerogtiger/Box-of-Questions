@@ -320,12 +320,12 @@ export default function Profile({ params }: { params: { lang: string, uuid: stri
               </div>
               <div className={langCond("w-1/2 justify-end flex gap-3 mt-1", " w-1/2 justify-end -border flex gap-3")} >
                 <Button fg="white" bg="black" shadow="darkgray" link="share">
-                  <div className={langCond("py-[2px] px-4", "py-3 px-3 leading-4 font-semibold")}>
+                  <div className={langCond("py-[2px] px-4 font-semibold", "py-3 px-3 leading-4 font-semibold")}>
                     {formatNewline(dict.shareBox)}
                   </div>
                 </Button>
                 <Button fg="white" bg="black" shadow="darkgray" link="answer">
-                  <div className={langCond("py-[2px] px-4", "py-3 px-3 leading-4 font-semibold")}>
+                  <div className={langCond("py-[2px] px-4 font-semibold", "py-3 px-3 leading-4 font-semibold")}>
                     {formatNewline(dict.profile.checkInbox)}
                   </div>
                 </Button>
@@ -472,7 +472,7 @@ export default function Profile({ params }: { params: { lang: string, uuid: stri
             <div className={langCond("mb-8 flex flex-col-reverse items-end gap-3", "flex mb-8")}>
               <div className={langCond("w-full flex flex-col-reverse items-end gap-3 ", "w-1/2 -border flex gap-4")}>
                 <Button fg={confirmDel ? "white" : "black"} bg={confirmDel ? "darkgreen" : "white"} shadow={confirmDel ? "black" : "darkred"} onclick={deleteAccount}>
-                  <div className={langCond("py-[2px] px-4", "-border py-3 px-3 leading-4 font-semibold")}>
+                  <div className={langCond("py-[2px] px-4 font-semibold", "-border py-3 px-3 leading-4 font-semibold")}>
                     {
                       confirmDel ?
                         <div>
