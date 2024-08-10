@@ -303,6 +303,10 @@ export default function Answer({ params }: { params: { lang: string, uuid: strin
     return val.split(/\n/).map(line => <React.Fragment key={line}>{line}<br /></React.Fragment>);
   }
 
+  function langCond(valEn: string, valZh: string) {
+    return (params.lang == "en" ? valEn : valZh);
+  }
+
   return (
     <>
       <Metadata title={`${name} ${dict.answer.checkBox} │ ${dict.questionBox}`} description="" />
@@ -313,14 +317,14 @@ export default function Answer({ params }: { params: { lang: string, uuid: strin
             <div className="w-1/2 -border flex gap-4 font-bold text-[40px] leading-snug">
               ↓
             </div>
-            <div className=" w-1/2 justify-end -border flex gap-3">
+            <div className={langCond("w-1/2 items-end flex flex-col gap-3", "w-1/2 justify-end -border flex gap-3")}>
               <Button fg="white" bg="black" shadow="darkgray" link="share">
-                <div className="-border py-3 px-3 leading-4 font-semibold">
+                <div className={langCond("py-[2px] px-4", "-border py-3 px-3 leading-4 font-semibold")}>
                   {formatNewline(dict.shareBox)}
                 </div>
               </Button>
               <Button fg="white" bg="black" shadow="darkgray" link="profile">
-                <div className="-border py-3 px-3 leading-4 font-semibold">
+                <div className={langCond("py-[2px] px-4", "-border py-3 px-3 leading-4 font-semibold")}>
                   {formatNewline(dict.setting)}
                 </div>
               </Button>
@@ -419,15 +423,15 @@ export default function Answer({ params }: { params: { lang: string, uuid: strin
           <div className="text-center text-sm my-6 text-[#AAAAAA]">
             {dict.answer.bottomOfPage}
           </div>
-          <div className="flex mb-8">
-            <div className="w-1/2 -border flex gap-4">
+          <div className={langCond("mb-8 flex flex-col-reverse items-end gap-3", "flex mb-8")}>
+            <div className={langCond("w-full flex flex-col-reverse items-end gap-3 ", "w-1/2 -border flex gap-4")}>
               <Button fg={confirmClear ? "white" : "black"} bg={confirmClear ? "darkgreen" : "white"} shadow={confirmClear ? "black" : "darkred"} onclick={clearBox}>
-                <div className="py-3 px-3 leading-4 font-semibold">
+                <div className={langCond("py-[2px] px-4", "-border py-3 px-3 leading-4 font-semibold")}>
                   {confirmClear ?
                     <div>
+                      {params.lang == "en" ? "⟵ " : ""}
                       {dict.answer.cancel}
-                      < br />
-                      ⟵-
+                      {params.lang == "en" ? "" : <div> ⟵- </div>}
                     </div>
                     :
                     <div>
@@ -437,24 +441,23 @@ export default function Answer({ params }: { params: { lang: string, uuid: strin
                 </div>
               </Button>
               <Button fg="black" bg="white" shadow="darkred" onclick={logOut}>
-                <div className="py-3 px-3 leading-4 font-semibold">
+                <div className={langCond("py-[2px] px-4", "-border py-3 px-3 leading-4 font-semibold")}>
                   {formatNewline(dict.logOut)}
                 </div>
               </Button>
             </div>
-            <div className=" w-1/2 justify-end -border flex gap-3">
+            <div className={langCond("w-full items-end flex flex-col gap-3", " w-1/2 justify-end -border flex gap-4")}>
               <Button fg="white" bg="black" shadow="darkgray" link="share">
-                <div className="-border py-3 px-3 leading-4 font-semibold">
+                <div className={langCond("py-[2px] px-4", "-border py-3 px-3 leading-4 font-semibold")}>
                   {formatNewline(dict.shareBox)}
                 </div>
               </Button>
               <Button fg="white" bg={confirmClear ? "darkred" : "black"} shadow={confirmClear ? "black" : "darkgray"} onclick={boxSettings}>
-                <div className="py-3 px-3 leading-4 font-semibold">
+                <div className={langCond("py-[2px] px-4", "-border py-3 px-3 leading-4 font-semibold")}>
                   {confirmClear ?
                     <div>
                       {dict.answer.confirm}
-                      < br />
-                      ⟶-
+                      {params.lang == "en" ? " ⟶" : <div> ⟶- </div>}
                     </div>
                     :
                     <div>

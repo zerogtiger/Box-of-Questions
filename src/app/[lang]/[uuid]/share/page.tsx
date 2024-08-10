@@ -11,7 +11,7 @@ import Metadata from "@/components/metadata";
 import { useDictionary } from "../../dictionaryProvider";
 
 
-export default function Share({ params }: { params: { uuid: string, pwd: string } }) {
+export default function Share({ params }: { params: { lang: string, uuid: string, pwd: string } }) {
   const QRCode = require('qrcode');
 
   const [name, setName] = useState<string>("◻️◻️◻️◻️◻️◻️");
@@ -126,7 +126,7 @@ export default function Share({ params }: { params: { uuid: string, pwd: string 
         ctx.fillStyle = "#7C7C7C";
         ctx.textAlign = "center";
         const { version } = require('../../../../../package.json');
-        ctx.fillText(`提问の箱子 | ${version}`, 28, 340);
+        ctx.fillText(`${dict.questionBox} | ${version}`, 28, 340);
         ctx.restore();
         ctx.lineWidth = 6;
         ctx.strokeRect(0, 0, 710, 710);
@@ -167,7 +167,7 @@ export default function Share({ params }: { params: { uuid: string, pwd: string 
           ctx.save();
           ctx.translate(canvas.width / 2, canvas.height / 2);
           ctx.rotate(-Math.PI / 2);
-          ctx.drawImage(logo, -150, 315, 35, 35);
+          ctx.drawImage(logo, params.lang == "en" ? -190 : -150, 315, 35, 35);
           // console.log("draw");
           ctx.restore();
           ctx.drawImage(qrcode, 310, 360, 280, 280);
@@ -200,6 +200,9 @@ export default function Share({ params }: { params: { uuid: string, pwd: string 
   function formatNewline(val: string) {
     return val.split(/\n/).map(line => <React.Fragment key={line}>{line}<br /></React.Fragment>);
   }
+  function langCond(valEn: string, valZh: string) {
+    return (params.lang == "en" ? valEn : valZh);
+  }
   return (
     <>
       <Metadata title={`${name} ${dict.share.sharingBox} │ ${dict.questionBox}`} description="" />
@@ -217,27 +220,27 @@ export default function Share({ params }: { params: { uuid: string, pwd: string 
         <div className="flex justify-center ">
           <div className="-border border-black max-w-[440px] w-3/4">
             <div className="flex mb-8">
-              <div className="w-1/2 -border flex gap-4">
+              <div className="h-fit w-1/2 -border flex gap-4">
                 <Button fg="white" bg="black" shadow="darkgray" onclick={() => router.back()}>
-                  <div className="py-3 px-3 leading-4 font-semibold">
+                  <div className={langCond("py-[2px] px-4 font-semibold", "-border py-3 px-3 leading-4 font-semibold")}>
                     <div>
+                      {params.lang == "en" ? "⟵ " : ""}
                       {dict.share.back}
-                      <br />
-                      ⟵-
+                      {params.lang == "en" ? "" : <div > ⟵- </div>}
                     </div>
                   </div>
                 </Button>
               </div>
-              <div className=" w-1/2 justify-end -border flex gap-3">
+              <div className={langCond(" w-1/2 items-end -border flex flex-col gap-3", " w-1/2 justify-end -border flex gap-3")}>
                 <Button fg="white" bg="black" shadow="darkgray" link="answer">
-                  <div className="py-3 px-3 leading-4 font-semibold">
+                  <div className={langCond("py-[2px] px-4 font-semibold", "-border py-3 px-3 leading-4 font-semibold")}>
                     <div>
                       {formatNewline(dict.share.checkInbox)}
                     </div>
                   </div>
                 </Button>
                 <Button fg="white" bg="black" shadow="darkgray" link="profile">
-                  <div className="py-3 px-3 leading-4 font-semibold">
+                  <div className={langCond("py-[2px] px-4 font-semibold", "-border py-3 px-3 leading-4 font-semibold")}>
                     <div>
                       {formatNewline(dict.share.profile)}
                     </div>

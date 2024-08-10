@@ -10,7 +10,7 @@ import { _profile_getPFPURL } from "../profile/actions";
 import Metadata from "@/components/metadata";
 import { useDictionary } from "../../dictionaryProvider";
 
-export default function Box({ params }: { params: { uuid: string } }) {
+export default function Box({ params }: { params: { lang: string, uuid: string } }) {
 
   const [qa, setqa] = useState<_box_qa[]>([]);
   const [name, setName] = useState<string>("◻️◻️◻️◻️◻️◻️");
@@ -40,6 +40,9 @@ export default function Box({ params }: { params: { uuid: string } }) {
   function formatNewline(val: string) {
     return val.split(/\n/).map(line => <React.Fragment key={line}>{line}<br /></React.Fragment>);
   }
+  function langCond(valEn: string, valZh: string) {
+    return (params.lang == "en" ? valEn : valZh);
+  }
   return (
     <>
       <Metadata title={`${name} の ${dict.box.box} │ ${dict.questionBox}`} description="" />
@@ -52,9 +55,9 @@ export default function Box({ params }: { params: { uuid: string } }) {
                 <div className="w-1/2 -border flex gap-4 font-bold text-[40px] leading-snug">
                   ↓
                 </div>
-                <div className=" w-1/2 justify-end -border flex gap-3">
+                <div className={langCond("w-2/3 flex justify-end gap-3 mt-4", " w-1/2 justify-end -border flex gap-3")}>
                   <Button fg="white" bg="black" shadow="darkgray" link="ask">
-                    <div className="py-3 px-3 leading-4 font-semibold">
+                    <div className={langCond("py-[2px] px-4", "py-3 px-3 leading-4 font-semibold")}>
                       {formatNewline(dict.box.askQuestion)}
                     </div>
                   </Button>
@@ -97,17 +100,17 @@ export default function Box({ params }: { params: { uuid: string } }) {
           <div className="text-center text-sm my-6 text-[#AAAAAA]">
             {dict.box.bottomOfPage}
           </div>
-          <div className="flex mb-8">
-            <div className="w-1/2 -border flex gap-4">
+          <div className={langCond("flex flex-col-reverse mb-8 items-end gap-3", "flex mb-8")}>
+            <div className={langCond("w-full flex flex-col items-end", "w-1/2 -border flex gap-4")}>
               <Button fg="black" bg="white" shadow="darkgreen" link="/login">
-                <div className="py-3 px-3 leading-4 font-semibold">
+                <div className={langCond("py-[2px] px-4", "py-3 px-3 leading-4 font-semibold")}>
                   {formatNewline(dict.box.getBox)}
                 </div>
               </Button>
             </div>
-            <div className=" w-1/2 justify-end -border flex gap-3">
+            <div className={langCond("w-full flex flex-col items-end", " w-1/2 justify-end -border flex gap-3")}>
               <Button fg="white" bg="black" shadow="darkgray" link="ask">
-                <div className="py-3 px-3 leading-4 font-semibold">
+                <div className={langCond("py-[2px] px-4", "py-3 px-3 leading-4 font-semibold")}>
                   {formatNewline(dict.box.askQuestion)}
                 </div>
               </Button>

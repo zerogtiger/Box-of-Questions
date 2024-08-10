@@ -39,19 +39,19 @@
       "answer": "Answer",
       "confirm": "Confirm",
       "edit": "Edit",
-      "hidePublish": "Hide / Publish",
+      "hidePublish": "Hide/Publish",
       "bottomOfPage": "THE END. No more questions!"
   },
   "ask": {
       "askSomething": "write something",
       "box": "uestion Inbox",
       "noMorePaper": "We ran out of paper, guess you could try again later...",
-      "getBox": "Grab \na box",
-      "checkoutBox": "Check \nInbox",
+      "getBox": "Grab a box",
+      "checkoutBox": "Check Inbox",
       "submit": "Submit"
   },
   "box": {
-    "askQuestion": "Ask now",
+    "askQuestion": "Submit のuestion",
     "box": "Inbox",
     "someoneAsked": "Someone asked: ",
     "theyAnswered": "They answered: ",
@@ -59,7 +59,7 @@
     "someoneSaid": "Someone said: ",
     "boxLocked": "The box got locked, guess you could try again later...",
     "bottomOfPage": "THE END. Get your questions in!",
-    "getBox": "Get a box"
+    "getBox": "Grab a box"
   },
   "profile": {
     "settings": "の Settings",
@@ -72,14 +72,14 @@
     "confirmPassword": "Confirm password",
     "box": "Inbox",
     "startStopAsk": "Allow submissions",
-    "startStopView": "Inbox viewing",
+    "startStopView": "Public Inbox",
     "showNewQuestions": "Auto-display Questions",
     "displayName": "Display name",
     "boxPrompt": "Question prompt",
     "previewBelow": "Preview below",
     "bottomOfPage": "THE END. No more settings!",
     "cancel": "Cancel",
-    "deleteAccount": "Delete\naccount",
+    "deleteAccount": "Delete account",
     "confirm": "Confirm",
     "whatAsk": "What should they ask about?",
     "theirQuestion": "Their question"

@@ -16,7 +16,7 @@ import { useDictionary } from "../../dictionaryProvider";
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY!);
 
-export default function Profile({ params }: { params: { uuid: string } }) {
+export default function Profile({ params }: { params: { lang: string, uuid: string } }) {
 
   const [question, setQuestion] = useState<string>("");
 
@@ -161,7 +161,6 @@ export default function Profile({ params }: { params: { uuid: string } }) {
   }
 
   const logOut = async () => {
-    // console.log("hi");
     await _login_deleteCookie();
     router.replace("/login");
     return;
@@ -305,6 +304,9 @@ export default function Profile({ params }: { params: { uuid: string } }) {
   function formatNewline(val: string) {
     return val.split(/\n/).map(line => <React.Fragment key={line}>{line}<br /></React.Fragment>);
   }
+  function langCond(valEn: string, valZh: string) {
+    return (params.lang == "en" ? valEn : valZh);
+  }
   return (
     <>
       <Metadata title={`${name} ${dict.profile.settings} │ ${dict.questionBox}`} description="" />
@@ -316,14 +318,14 @@ export default function Profile({ params }: { params: { uuid: string } }) {
               <div className="w-1/2 -border gap-4 font-bold text-2xl flex items-end">
                 {dict.profile.profile} ⟵
               </div>
-              <div className=" w-1/2 justify-end -border flex gap-3">
+              <div className={langCond("w-1/2 justify-end flex gap-3 mt-1", " w-1/2 justify-end -border flex gap-3")} >
                 <Button fg="white" bg="black" shadow="darkgray" link="share">
-                  <div className="-border py-3 px-3 leading-4 font-semibold">
+                  <div className={langCond("py-[2px] px-4", "py-3 px-3 leading-4 font-semibold")}>
                     {formatNewline(dict.shareBox)}
                   </div>
                 </Button>
                 <Button fg="white" bg="black" shadow="darkgray" link="answer">
-                  <div className="py-3 px-3 leading-4 font-semibold">
+                  <div className={langCond("py-[2px] px-4", "py-3 px-3 leading-4 font-semibold")}>
                     {formatNewline(dict.profile.checkInbox)}
                   </div>
                 </Button>
@@ -380,7 +382,7 @@ export default function Profile({ params }: { params: { uuid: string } }) {
               </div>
             </div>
             <div className="-border flex mt-2 mb-4 h-fit">
-              <div className="w-1/2 -border gap-4 font-bold text-2xl flex items-end">
+              <div className="w-1/2 -border gap-4 font-bold text-2xl flex items-start">
                 <Indicator color={askInd[0]} />
                 <Indicator color={askInd[1]} />
                 <Indicator color={askInd[2]} />
@@ -394,7 +396,7 @@ export default function Profile({ params }: { params: { uuid: string } }) {
               </div>
             </div>
             <div className="-border flex mt-2 mb-4 h-fit">
-              <div className="w-1/2 -border gap-4 font-bold text-2xl flex items-end">
+              <div className="w-1/2 -border gap-4 font-bold text-2xl flex items-start">
                 <Indicator color={boxInd[0]} />
                 <Indicator color={boxInd[1]} />
                 <Indicator color={boxInd[2]} />
@@ -408,7 +410,7 @@ export default function Profile({ params }: { params: { uuid: string } }) {
               </div>
             </div>
             <div className="-border flex mt-2 mb-5 h-fit">
-              <div className="w-1/2 -border gap-4 font-bold text-2xl flex items-end">
+              <div className="w-1/2 -border gap-4 font-bold text-2xl flex items-start">
                 <Indicator color={postInd[0]} />
                 <Indicator color={postInd[1]} />
                 <Indicator color={postInd[2]} />
@@ -438,10 +440,10 @@ export default function Profile({ params }: { params: { uuid: string } }) {
             </div>
             <TextField maxChar={1000} placeholder={dict.profile.whatAsk} rows={6} text={newPrompt} setText={setNewPrompt} />
             <div className="flex">
-              <div className="w-1/2 text-sm leading-none">
+              <div className="w-fit text-sm leading-none">
                 ↓ {dict.profile.previewBelow}
               </div>
-              <div className="w-1/2 flex justify-end gap-3 ">
+              <div className="w-fit ml-auto flex justify-end gap-3 ">
                 <Indicator color={promptInd} />
                 <Button fg="white" bg="black" shadow="darkgray" onclick={changePrompt}>
                   <div className="px-5 leading-6 font-semibold">
@@ -467,16 +469,16 @@ export default function Profile({ params }: { params: { uuid: string } }) {
             <div className="text-center text-sm my-6 text-[#AAAAAA]">
               {dict.profile.bottomOfPage}
             </div>
-            <div className="flex mb-8">
-              <div className="w-1/2 -border flex gap-4">
+            <div className={langCond("mb-8 flex flex-col-reverse items-end gap-3", "flex mb-8")}>
+              <div className={langCond("w-full flex flex-col-reverse items-end gap-3 ", "w-1/2 -border flex gap-4")}>
                 <Button fg={confirmDel ? "white" : "black"} bg={confirmDel ? "darkgreen" : "white"} shadow={confirmDel ? "black" : "darkred"} onclick={deleteAccount}>
-                  <div className="py-3 px-3 leading-4 font-semibold" >
+                  <div className={langCond("py-[2px] px-4", "-border py-3 px-3 leading-4 font-semibold")}>
                     {
                       confirmDel ?
                         <div>
-                          {dict.profile.cancel}
-                          < br />
-                          ⟵-
+                          {params.lang == "en" ? "⟵ " : ""}
+                          {dict.answer.cancel}
+                          {params.lang == "en" ? "" : <div> ⟵- </div>}
                         </div>
                         :
                         <div>
@@ -486,24 +488,23 @@ export default function Profile({ params }: { params: { uuid: string } }) {
                   </div>
                 </Button>
                 <Button fg="black" bg="white" shadow="darkred" onclick={logOut}>
-                  <div className="py-3 px-3 leading-4 font-semibold">
+                  <div className={langCond("py-[2px] px-4 font-semibold", "-border py-3 px-3 leading-4 font-semibold")}>
                     {formatNewline(dict.logOut)}
                   </div>
                 </Button>
               </div>
-              <div className=" w-1/2 justify-end -border flex gap-3">
+              <div className={langCond("w-full items-end flex flex-col gap-3", " w-1/2 justify-end -border flex gap-3")}>
                 <Button fg="white" bg="black" shadow="darkgray" link="share">
-                  <div className="-border py-3 px-3 leading-4 font-semibold">
+                  <div className={langCond("py-[2px] px-4 font-semibold", "-border py-3 px-3 leading-4 font-semibold")}>
                     {formatNewline(dict.shareBox)}
                   </div>
                 </Button>
                 <Button fg="white" bg={confirmDel ? "darkred" : "black"} shadow={confirmDel ? "black" : "darkgray"} onclick={viewBox}>
-                  <div className="py-3 px-3 leading-4 font-semibold">
+                  <div className={langCond("py-[2px] px-4 font-semibold", "-border py-3 px-3 leading-4 font-semibold")}>
                     {confirmDel ?
                       <div>
                         {dict.profile.confirm}
-                        <br />
-                        ⟶-
+                        {params.lang == "en" ? " ⟶" : <div> ⟶- </div>}
                       </div>
                       :
                       <div>
@@ -516,7 +517,7 @@ export default function Profile({ params }: { params: { uuid: string } }) {
             </div>
           </div>
         </div>
-      </main>
+      </main >
     </>
   );
 

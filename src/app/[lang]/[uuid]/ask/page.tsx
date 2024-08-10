@@ -9,7 +9,7 @@ import { _profile_getPFPURL } from "../profile/actions";
 import Metadata from "@/components/metadata";
 import { useDictionary } from "../../dictionaryProvider";
 
-export default function Ask({ params }: { params: { uuid: string } }) {
+export default function Ask({ params }: { params: { lang: string, uuid: string } }) {
 
   const [question, setQuestion] = useState<string>("");
   const [name, setName] = useState<string>("◻️◻️◻️◻️◻️◻️");
@@ -52,6 +52,9 @@ export default function Ask({ params }: { params: { uuid: string } }) {
     return val.split(/\n/).map(line => <React.Fragment key={line}>{line}<br /></React.Fragment>);
   }
 
+  function langCond(valEn: string, valZh: string) {
+    return (params.lang == "en" ? valEn : valZh);
+  }
   return (
     <>
       <Metadata title={`${name} の ${dict.ask.box} │ ${dict.questionBox}`} description="" />
@@ -70,15 +73,15 @@ export default function Ask({ params }: { params: { uuid: string } }) {
                 {dict.ask.noMorePaper}
               </div>
           }
-          <div className="flex">
-            <div className="w-1/2 -border flex gap-4">
+          <div className={langCond("flex flex-col-reverse items-end gap-3", "flex")}>
+            <div className={langCond("w-full flex gap-3 items-end flex-col-reverse", "w-1/2 -border flex gap-4")}>
               <Button fg="black" bg="white" shadow="darkgreen" link="/login">
-                <div className="py-3 px-3 leading-4 font-semibold">
+                <div className={langCond("py-[2px] px-4", "-border py-3 px-3 leading-4 font-semibold")}>
                   {formatNewline(dict.ask.getBox)}
                 </div>
               </Button>
               <Button fg="white" bg="black" shadow="darkgray" link={`box`}>
-                <div className="py-3 px-3 leading-4 font-semibold">
+                <div className={langCond("py-[2px] px-4", "-border py-3 px-3 leading-4 font-semibold")}>
                   {formatNewline(dict.ask.checkoutBox + "→")}
                 </div>
               </Button>
@@ -88,9 +91,9 @@ export default function Ask({ params }: { params: { uuid: string } }) {
                 <div className=" w-1/2 justify-end -border flex gap-3">
                   <Indicator color={color} />
                   <Button fg="white" bg="black" shadow="darkgray" onclick={submit} link="box">
-                    <div className="py-3 px-3 leading-4 font-semibold">
+                    <div className={langCond("py-[2px] px-4", "-border py-3 px-3 leading-4 font-semibold")}>
                       {dict.ask.submit}
-                      <br />
+                      {params.lang == "en" ? " " : <br />}
                       -⟶
                     </div>
                   </Button>
