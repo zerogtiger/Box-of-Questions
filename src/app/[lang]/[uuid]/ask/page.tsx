@@ -88,7 +88,7 @@ export default function Ask({ params }: { params: { lang: string, uuid: string }
             </div>
             {
               qOpen && id !== -1 ?
-                <div className=" w-1/2 justify-end -border flex gap-3">
+                <div className={langCond("flex gap-3 justify-end", "w-1/2 justify-end -border flex gap-3")}>
                   <Indicator color={color} />
                   <Button fg="white" bg="black" shadow="darkgray" onclick={submit} link="box">
                     <div className={langCond("py-[2px] px-4 font-semibold", "-border py-3 px-3 leading-4 font-semibold")}>
