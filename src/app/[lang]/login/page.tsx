@@ -57,7 +57,7 @@ export default function Login({ params }: { params: { lang: string } }) {
     const passwordsEqual = (regPassword === regPC);
     const nonEmpty = (regName !== "" && regUsername !== "");
     if (passwordsEqual === true && nonEmpty === true) {
-      const regable = await _login_registerable(regName, regUsername, hash(regPassword));
+      const regable = await _login_registerable(regName, regUsername, hash(regPassword), params.lang);
       if (regable) {
         setRegColor("lightgreen");
         await _login_createCookie(regable);

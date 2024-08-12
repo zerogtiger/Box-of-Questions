@@ -126,7 +126,7 @@ export async function _login_loginable(username: string, password: string) {
   return newUser?.id;
 }
 
-export async function _login_registerable(name: string, username: string, password: string) {
+export async function _login_registerable(name: string, username: string, password: string, lang: string) {
   let exist = true;
   const newUser = await prisma.users.findFirstOrThrow({
     where: {
@@ -142,12 +142,13 @@ export async function _login_registerable(name: string, username: string, passwo
     }
   });
   if (!(exist === true)) {
+    const q_header = lang == "en" ? "Ask something" : "请提问";
     const result = await prisma.users.create({
       data: {
         name: name,
         username: username,
         password: password,
-        q_header: "请提问",
+        q_header: q_header,
         q_open: true,
         box_open: false,
       },
