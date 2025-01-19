@@ -333,7 +333,7 @@ export default function Profile({ params }: { params: { lang: string, uuid: stri
             </div>
             <div className="flex flex-row">
               <IMAGE id="display_pfp" width={64} height={64} src={pfpDisplay} alt="Profile photo" />
-              <form action={changePFP} className="w-full -border border-black place-items-center justify-end" id="pfp_upload">
+              <form action={changePFP} className="w-full -border border-black place-items-end justify-end" id="pfp_upload">
                 <div className="flex pb-3 justify-end gap-3 ">
                   <Indicator color={pfpInd} />
                   <Button fg="white" bg="black" shadow="darkgray">
