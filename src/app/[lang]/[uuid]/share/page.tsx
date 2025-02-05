@@ -1,6 +1,6 @@
 "use client"
 import Button from "@/components/button";
-import Header from "@/components/header";
+import Header from "@/components/header"
 import React, { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { default as IMAGE } from "next/image";

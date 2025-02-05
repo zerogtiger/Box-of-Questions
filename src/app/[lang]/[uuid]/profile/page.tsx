@@ -1,6 +1,6 @@
 "use client"
 import Button from "@/components/button";
-import Header from "@/components/header";
+import Header from "@/components/header"
 import Indicator from "@/components/indicator";
 import TextField from "@/components/textfield";
 import React, { useState, useEffect } from "react";

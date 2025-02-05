@@ -1,6 +1,6 @@
 "use client"
 import Button from "@/components/button";
-import Header from "@/components/header";
+import Header from "@/components/header"
 import TextDisplay from "@/components/textdisplay";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

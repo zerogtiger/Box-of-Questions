@@ -1,6 +1,6 @@
 "use client"
 import Button from "@/components/button";
-import Header from "@/components/header";
+import Header from "@/components/header"
 import Indicator from "@/components/indicator";
 import TextField from "@/components/textfield";
 import { _ask_getData, _ask_user, _ask_submitData } from "./actions";
